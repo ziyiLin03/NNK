@@ -25,7 +25,7 @@
   }
 
   if (host !== "127.0.0.1" && host !== "localhost") {
-    return "https://hfobackend-production.up.railway.app";
+    return "https://perpetual-tranquility-production-d044.up.railway.app";
   }
 
   if (port && port !== "8000") {

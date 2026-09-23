@@ -155,9 +155,9 @@ SIMPLE_JWT = {
 if IS_PRODUCTION:
     CORS_ALLOW_ALL_ORIGINS = False
     CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS',
-        default='https://project-2hw2p.vercel.app', cast=Csv())
+        default='https://nnk-nu.vercel.app', cast=Csv())
     CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS',
-        default=','.join(CORS_ALLOWED_ORIGINS + ['https://hfobackend-production.up.railway.app']),
+        default=','.join(CORS_ALLOWED_ORIGINS + ['https://perpetual-tranquility-production-d044.up.railway.app']),
         cast=Csv())
     
 

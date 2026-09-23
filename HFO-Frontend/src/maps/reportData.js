@@ -40,7 +40,7 @@ export function getApiBase() {
 
   const {hostname, port} = window.location;
   if (hostname !== "127.0.0.1" && hostname !== "localhost") {
-    return "https://hfobackend-production.up.railway.app";
+    return "https://perpetual-tranquility-production-d044.up.railway.app";
   }
 
   return port && port !== "8000" ? "http://localhost:8000" : "";

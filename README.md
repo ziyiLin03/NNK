@@ -36,24 +36,26 @@ También se puede ejecutar Django con Python 3.12+, un entorno virtual,
 Configurar `HFO-Backend/.env`, ejecutar `python HFO-Backend/manage.py migrate`
 y `python HFO-Backend/manage.py runserver`.
 
-## Conectar el monorepo a los despliegues existentes
+## Conectar el monorepo a los nuevos despliegues
 
-Cambiar el repositorio de origen de **los proyectos existentes** a
-`https://github.com/ziyiLin03/NNK`, rama `main`, conservando sus dominios,
-variables, base de datos y credenciales actuales.
+Conectar los nuevos proyectos a `https://github.com/ziyiLin03/NNK`, rama `main`.
+Frontend: `https://nnk-nu.vercel.app`. Backend:
+`https://perpetual-tranquility-production-d044.up.railway.app`.
 
 ### Vercel
 
 - Root Directory: `HFO-Frontend` (no la subcarpeta `hfo-frontend`).
 - Framework: Vite; instalación `npm ci`; build `npm run build`; salida `dist`.
-- Variable `VITE_API_BASE_URL`: `https://hfobackend-production.up.railway.app`
+- Variable `VITE_API_BASE_URL`: `https://perpetual-tranquility-production-d044.up.railway.app`
   o el origen público de la API, sin `/api`.
 - Volver a desplegar después de cambiar la variable: se incorpora al build.
 - No añadir una reescritura global a `index.html`: esta web tiene múltiples HTML.
 
 `vercel.json` incluye los comandos y la caché de `/config.js`. El build genera
 este script para las páginas HTML y los mapas; en desarrollo la API por defecto
-es localhost. Si se omite la variable en producción se conserva el dominio Railway anterior.
+es localhost. Si se omite la variable en producción se usa el nuevo servicio Railway.
+Una variable `VITE_API_BASE_URL` configurada en Vercel tiene prioridad: actualizarla
+también si todavía contiene el dominio antiguo, y generar un nuevo deployment.
 No poner secretos en variables `VITE_*`: son públicas.
 
 ### Railway
@@ -72,7 +74,7 @@ No poner secretos en variables `VITE_*`: son públicas.
 
 El healthcheck `/health/` comprueba que Django responde, sin autenticación ni
 redirección HTTPS; no comprueba servicios externos. Django acepta `DATABASE_URL`
-y los orígenes configurados, manteniendo los dominios antiguos como valores por defecto.
+y los orígenes configurados, usando los dominios del nuevo despliegue como valores por defecto.
 `DJANGO_DEBUG` evita conflictos con una variable global `DEBUG` del sistema.
 
 Referencias: [monorepos en Vercel](https://vercel.com/docs/monorepos),

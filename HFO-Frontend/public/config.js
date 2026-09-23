@@ -9,6 +9,6 @@
 window.API_BASE_URL = window.API_BASE_URL || (
   ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
     ? 'http://localhost:8000'
-    : 'https://hfobackend-production.up.railway.app'
+    : 'https://perpetual-tranquility-production-d044.up.railway.app'
 );
 window.HFO_ANALYTICS_API = window.API_BASE_URL;

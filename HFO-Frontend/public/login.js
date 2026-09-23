@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Error al conectar con el servidor:", error);
-            alert("No se pudo conectar con el servidor. ¿Está el Docker encendido?");
+            alert("No se pudo conectar con el servidor. Inténtalo de nuevo más tarde.");
         }
     });
 });

@@ -8,6 +8,12 @@ import test from 'node:test'
 import { runtimeConfigPlugin } from '../runtime-config.js'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+test('unconfigured production pages use the new Railway service', () => {
+  const window = { location: { hostname: 'nnk-nu.vercel.app' } }
+  runInNewContext(readFileSync(join(root, 'public/config.js'), 'utf8'), { window })
+  assert.equal(window.API_BASE_URL, 'https://perpetual-tranquility-production-d044.up.railway.app')
+  assert.equal(window.HFO_ANALYTICS_API, window.API_BASE_URL)
+})
 test('production config preserves custom API for legacy scripts and analytics', () => {
   const dir = mkdtempSync(join(tmpdir(), 'hfo-config-'))
   try {
@@ -37,6 +43,7 @@ test('all map pages load the shared configuration before their scripts', () => {
   for (const name of ['map1', 'map2', 'map3']) {
     const html = readFileSync(join(root, `${name}.html`), 'utf8')
     assert.ok(html.indexOf('/config.js') >= 0)
+    assert.ok(!html.includes('window.API_BASE_URL ='))
     assert.ok(html.indexOf('/config.js') < html.indexOf(`/src/${name}.js`))
   }
 })

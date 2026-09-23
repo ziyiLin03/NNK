@@ -28,7 +28,7 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, __dirname, 'VITE_')
   const apiBase = env.VITE_API_BASE_URL || (command === 'serve'
     ? 'http://localhost:8000'
-    : 'https://hfobackend-production.up.railway.app')
+    : 'https://perpetual-tranquility-production-d044.up.railway.app')
   return {
   plugins: [
     runtimeConfigPlugin(__dirname, apiBase),
