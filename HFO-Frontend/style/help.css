@@ -1,0 +1,162 @@
+.help-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--content-bg);
+}
+
+.content-grid {
+  display: flex;
+  flex-direction: column;
+
+}
+
+h1 {
+  color: rgb(193, 18, 31);
+  border-bottom: 2px solid rgb(193, 18, 31);
+  width: 100%;
+  max-width: 820px;
+  box-sizing: border-box;
+  text-align: left;
+  margin: 38px 0 20px 8px;
+}
+
+details {
+  width: 820px; 
+  box-sizing: border-box;
+  background-color: var(--bg-surface);
+  border-radius: 20px;
+  padding: 12px 20px;
+  border: 2px solid rgb(202, 202, 202);
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+details:hover {
+  border-color: rgb(193, 18, 31);
+  transform: scale(1.05);
+}
+
+details[open] {
+  border-color: rgb(193, 18, 31);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text-dark) ;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  outline: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::after {
+  content: '\f107';
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  transition: transform 0.3s;
+}
+
+details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.details-content {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-dark) !important;
+  color: var(--text-dark) ;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.dark p,
+.dark strong{
+  color: white;
+}
+
+.contact-box {
+  background-color: var(--bg-color);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  border-left: 4px solid rgb(193, 18, 31);
+}
+
+/* Media Queries adaptadas de report.css */
+@media (max-width: 500px) {
+
+  .help-container {
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    align-items: center;
+  }
+
+  .content-grid {
+    width: 100%;
+    padding: 0;              /* resetea el padding: 5px 60px del pc */
+    box-sizing: border-box;
+  }
+
+  h1 {
+    margin-top: 70px;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  details {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+  }
+
+
+  summary {
+    font-size: 14px;
+  }
+
+  .details-content {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1100px) {
+
+  .help-container {
+    width: 100%;
+    padding: 0 45px;
+    box-sizing: border-box;
+    align-items: center;
+  }
+
+  .content-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0;              /* resetea el padding: 5px 60px del pc */
+    box-sizing: border-box;
+  }
+
+  h1 {
+    margin-top: 70px;
+    width: 100%;
+    max-width: 650px;
+    text-align: left;
+  }
+
+  details {
+    width: 100%;
+    max-width: 650px;       
+    box-sizing: border-box;
+  }
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HFO Analytics - Demographics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style/theme.css"/>
+  <link rel="stylesheet" href="style/dashboard2.css"/>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+  <style>
+    .how-to-read{font-size:12px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:12px;line-height:1.55;}
+    .insight{font-size:13px;color:var(--ok);margin-top:8px;padding:8px 12px;background:rgba(117,214,160,0.07);border-radius:8px;border-left:3px solid var(--ok);line-height:1.5;}
+    .tab-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+    .sub-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;padding:8px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;}
+    .sub-row label{font-size:12px;color:var(--muted);}
+    .nat-selector{display:flex;flex-wrap:wrap;gap:10px;padding:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;}
+  </style>
+  <script defer src="/config.js"></script>
+  <script defer src="/dashboard-prefs.js"></script>
+  <script defer src="/i18n.js"></script>
+  <script defer src="/help-tooltips.js"></script>
+  <script defer src="/api.js"></script>
+  <script defer src="/formatters.js"></script>
+  <script defer src="/filters.js"></script>
+  <script defer src="/charts.js"></script>
+  <script defer src="/export.js"></script>
+  <script defer src="/demographics-dashboard.js"></script>
+  <script defer src="/sidebar.js"></script>
+</head>
+<body>
+  <div class="page">
+
+    <div class="top-settings">
+      <div class="settings-group">
+        <label for="languageSelect">Language</label>
+        <select id="languageSelect"><option value="en">English</option><option value="es">Español</option></select>
+      </div>
+      <div class="top-actions">
+        <button type="button" id="exportPagePdfBtn" class="button primary" data-export-exclude="true" data-i18n="lbl.export_pdf">Export PDF report</button>
+        <button type="button" id="themeToggleBtn" data-theme-toggle class="button" data-i18n="lbl.dark_mode">Dark mode</button>
+      </div>
+    </div>
+
+        <nav class="page-index">
+      <span>Dashboards</span>
+      <a href="/index-dashboard.html">Home</a>
+      <a href="/operational_kpis_dashboard.html">Volume &amp; Coverage</a>
+      <a class="active" href="/demographics_dashboard.html">Demographics</a>
+      <a href="/dashboard_02_incident_needs.html">Incident &amp; Needs</a>
+      <a href="/dashboard_04_mobility_route.html">Mobility Evidence</a>
+      <span style="color:var(--line);margin:0 4px">|</span>
+      <a href="/dashboard.html" style="color:var(--muted);font-size:12px">Return to main website</a>
+    </nav>
+
+    <h1>Demographics</h1>
+    <p class="subtitle">Weighted demographic and vulnerability indicators based on testimony data · source: testimonies.json</p>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="section-title">Filters</h2>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.time_window">Time window</div>
+          <div id="timeFilterButtons" class="filter-row">
+            <button type="button" class="filter-button" data-range="last1">24h</button>
+            <button type="button" class="filter-button" data-range="last7">7d</button>
+            <button type="button" class="filter-button" data-range="last30">30d</button>
+            <button type="button" class="filter-button" data-range="last90">90d</button>
+            <button type="button" class="filter-button" data-range="last180">180d</button>
+            <button type="button" class="filter-button" data-range="last365">365d</button>
+            <button type="button" class="filter-button" data-range="all">All</button>
+            <button type="button" class="filter-button" data-range="custom">Custom</button>
+          </div>
+          <div class="range-inputs"><input id="customFrom" type="date"/><input id="customTo" type="date"/></div>
+        </div>
+        <div class="filter-group"><div class="field-label" data-i18n="lbl.regions">Regions</div><div id="regionFilterButtons" class="filter-row"></div></div>
+        <div class="filter-group"><button type="button" class="button" onclick="window.HFOPrefs.reset()" data-i18n="lbl.reset_filters">Reset filters</button></div>
+        <div class="meta-boxes">
+          <div class="mini-box"><div class="k" data-i18n="lbl.source">Source</div><div id="metaSource" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.loaded_window">Loaded window</div><div id="metaWindow" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.dataset_coverage">Dataset coverage</div><div id="metaDataset" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.selected_regions">Selected regions</div><div id="metaRegions" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.status">Status</div><div id="dashboardStatus" class="status">—</div></div>
+        </div>
+      </aside>
+
+      <main class="main">
+
+        <!-- Overview cards — 6 cards -->
+        <section class="cards" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+          <div class="card"><div class="label">People represented</div><div id="kpiPeople" class="value">—</div></div>
+          <div class="card"><div class="label">Testimonies</div><div id="kpiTestimonies" class="value">—</div></div>
+          <div class="card"><div class="label">Unique nationalities</div><div id="kpiNationalities" class="value">—</div></div>
+          <div class="card"><div class="label">Entities</div><div id="kpiEntities" class="value">—</div></div>
+          <div class="card"><div class="label">Data completeness</div><div id="kpiCompleteness" class="value">—</div></div>
+        </section>
+
+        <div id="emptyState" class="empty-state hide">No data matches the current filters.</div>
+
+        <!-- Gender -->
+        <section class="panel">
+          <h2 data-i18n="h2.gender_dist">Gender distribution</h2>          <div class="how-to-read" id="howToGender"></div>
+          <div class="chart-wrap"><canvas id="genderChart"></canvas></div>
+          <p class="insight" id="genderInsight"></p>
+        </section>
+
+        <!-- Nationality -->
+        <section class="panel">
+          <h2 data-i18n="h2.nationalities">Nationalities</h2>          <div class="how-to-read" id="howToNat"></div>
+          <div class="chart-wrap tall"><canvas id="natChart"></canvas></div>
+          <p class="insight" id="natInsight"></p>
+        </section>
+
+        <!-- Vulnerability -->
+        <section class="panel">
+          <h2 data-i18n="h2.vuln_types">Vulnerability types</h2>          <div class="how-to-read" id="howToVuln"></div>
+          <div class="chart-wrap tall"><canvas id="vulnChart"></canvas></div>
+          <p class="insight" id="vulnInsight"></p>
+        </section>
+
+        <!-- Nationality table -->
+        <section class="panel">
+          <h2 data-i18n="h2.nationality_detail">Nationality detail</h2>
+          <div id="natSummaryBox" style="font-size:13px;line-height:1.7;padding:10px 14px;background:rgba(98,182,255,0.07);border:1px solid rgba(98,182,255,0.2);border-radius:10px;margin-bottom:12px;color:var(--text);"></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nationality</th><th class="number">People</th><th class="number">Testimonies</th><th class="number">Share</th></tr></thead>
+              <tbody id="breakdownTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Data quality -->
+        <section class="panel">
+          <h2 data-i18n="h2.data_quality">Data quality</h2>
+          <div class="how-to-read" id="howToQuality"></div>
+          <div id="completenessBar" style="margin-bottom:12px;"></div>
+          <div id="qualitySummaryBox" style="font-size:13px;line-height:1.7;padding:10px 14px;background:rgba(98,182,255,0.07);border:1px solid rgba(98,182,255,0.2);border-radius:10px;margin-bottom:12px;color:var(--text);"></div>
+          <p class="insight" id="qualityInsight" style="border-left-color:var(--warning);background:rgba(255,209,102,0.07);color:var(--warning);"></p>
+          <div class="table-wrap" style="margin-top:12px;">
+            <table>
+              <thead><tr><th>Field</th><th class="number">Filled</th><th class="number">Missing</th><th class="number">Completeness</th></tr></thead>
+              <tbody id="qualityTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+  <script>
+  // Set how-to for quality on load
+    document.addEventListener("DOMContentLoaded", () => {
+      const el = document.getElementById("howToQuality");
+      if (el) el.textContent = "Completeness of critical fields across all testimonies in the selected window. Low completeness in key fields may affect the reliability of the breakdowns above.";
+    });
+  </script>
+</body>
+</html>

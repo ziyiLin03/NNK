@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Details - No Name Kitchen</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  
+  <link rel="stylesheet" href="/style/general.css">
+  <link rel="stylesheet" href="/style/report.css">
+</head>
+<body>
+
+  <input type="checkbox" id="theme" style="display: none;">
+
+  <main class="report-wrapper">
+    <article class="report-card">
+      
+      <header class="report-header">
+        <h1 id="report-custom-id">Loading Report...</h1>
+        <p class="interview-type"><strong style="color: var(--text-dark);">Report Size :</strong> <span style="color: var(--text-dark);" id="report-group">Loading...</span></p>
+        <p class="interview-type"><strong style="color: var(--text-dark);">Report Type :</strong> <span style="color: var(--text-dark);" id="report-type">Loading...</span></p>
+      </header>
+
+      <section class="report-section" id="section-manual">
+        <h2 style="color: var(--text-dark);"><i style="color: var(--text-dark);" class="fa-solid fa-file-signature"></i> Manual Report</h2>
+        
+        <div class="info-row">
+        <label style="color: var(--text-dark);" for="report-age">Age :</label>
+        <input type="number" id="report-age" readonly>
+        </div>
+
+        <div class="info-row">
+        <label style="color: var(--text-dark);" for="report-gender">Gender :</label>
+        <select id="report-gender" disabled>
+          <option value="" disabled>Select Gender...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Non-Binary">Non-Binary</option>
+          <option value="Other">Other</option>
+          <option value="Unknown">Unknown</option>
+        </select>
+        </div>
+
+        <div class="info-row">
+        <label style="color: var(--text-dark);" for="report-nationality">Nationality :</label>
+        <select id="report-nationality" disabled>
+          <option value=""></option>
+        </select>
+        </div>
+        
+        <div class="info-row">
+          <label style="color: var(--text-dark);">Vulnerability :</label>
+          <span id="report-vulnerability-type" style="color: var(--text-dark);">—</span>
+        </div>
+
+        <div class="info-row">
+          <label style="color: var(--text-dark);">Legal Situation :</label>
+          <span id="report-legal-situation" style="color: var(--text-dark);">—</span>
+        </div>
+
+        <label style="color: var(--text-dark);" for="report-desc">Extra Information :</label>
+        <textarea id="report-desc" readonly></textarea>
+      </section>
+
+      <section class="report-section" id="section-map" style="display: none;">
+        <h2 style="color: var(--text-dark);"><i style="color: var(--text-dark);" class="fa-solid fa-map-location-dot"></i> Location (Map)</h2>
+        <ul id="map-coordinates-list" class="coord-list"></ul>
+      </section>
+
+      <section class="report-section" id="section-audio" style="display: none;">
+        <h2 style="color: var(--text-dark);"><i style="color: var(--text-dark);" class="fa-solid fa-microphone-lines"></i> Audio & Transcription</h2>
+        <div id="audio-list"></div>
+      </section>
+
+      <section class="report-section" id="section-photo" style="display: none;">
+        <h2 style="color: var(--text-dark);"><i style="color: var(--text-dark);" class="fa-solid fa-images"></i> Photos</h2>
+        <div id="photo-gallery" class="photo-gallery"></div>
+      </section>
+
+      <div class="action-buttons">
+        <button class="btn-back" onclick="history.back()">
+          <i class="fa-solid fa-arrow-left icon-left"></i> Go Back
+        </button>
+        <button class="btn-edit" id="btnEdit">
+          <i class="fa-solid fa-edit icon-left"></i> Edit Report
+        </button>
+        <button class="btn-remove" id="btnRemove">
+          <i class="fa-solid fa-trash icon-left"></i> Remove
+        </button>
+        <button class="btn-submit" id="btnSubmit">
+          <i class="fa-solid fa-paper-plane icon-left"></i> Submit
+        </button>
+      </div>
+
+    </article>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.min.js"></script>
+  <script src="/config.js"></script>
+  <script src="/sidebar.js"></script>
+  <script src="/report.js"></script>
+  <script src="/translator.js"></script>
+</body>
+</html>

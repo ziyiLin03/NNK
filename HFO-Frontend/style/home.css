@@ -1,0 +1,234 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-size: cover;
+  position: relative;
+  text-align: center;
+  min-height: 80vh; 
+  margin-left: -15px; /* Compensa el padding de 5px 60px para que el fondo llegue al borde */
+}
+
+h1 {
+  color: rgb(193, 18, 31);
+  border-bottom: 2px solid rgb(193, 18, 31);
+  width: 100%; /* Igual que la tarjeta */
+  max-width: 820px; /* El tope máximo para pantallas grandes */
+  box-sizing: border-box;
+  text-align: left;
+  margin: 40px 0 20px 0;
+}
+
+input {
+  width: 820px; /* Igual que la tarjeta */
+  box-sizing: border-box; /* Clave para que el padding no ensanche la barra */
+  margin-bottom: 20px;
+  border-radius: 40px;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+  -ms-border-radius: 40px;
+  -o-border-radius: 40px;
+  padding: 10px 20px;
+  border: 2px solid rgb(202, 202, 202);
+}
+
+input::placeholder {
+  font-size: 12px;
+  color: rgb(183, 183, 183);
+}
+
+#reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; 
+  width: 100%;
+  align-items: center;
+  padding: 0 0 30px 0;
+}
+
+/* Ajuste de la tarjeta para espaciado uniforme */
+.message-preview {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Esto reparte el espacio equitativamente */
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: none;
+  width: 820px;
+  padding: 15px 25px; /* Padding equilibrado a los lados */
+  background-color: var(--content-bg);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  gap: 20px;
+  box-shadow: 0 0 8px rgb(162, 202, 206);
+}
+
+.message-preview:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgb(162, 202, 206);
+}
+
+/* Limpiamos el icono de posiciones absolutas antiguas */
+.icon {
+  color: var(--text);
+}
+
+/* Limpiamos el nombre de márgenes fijos */
+.name {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+/* --- FIX PARA EL COLOR DE LOS TAGS --- */
+.tag-active {
+  background-color: rgb(193, 18, 31) !important;
+  color: white !important;
+}
+
+/* Obligamos a los iconos de FontAwesome a ser blancos */
+.tag-active i {
+  color: white !important;
+}
+
+.tag-inactive {
+  background-color: #e4e4e4 !important;
+  color: #a0a0a0 !important;
+}
+
+.tag-inactive i {
+  color: #a0a0a0 !important;
+}
+
+.methods-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Fecha y hora */
+.report-datetime {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+/* Diseño base de la etiqueta */
+.method-tag {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 500px) {
+
+  .container {
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    align-items: center;
+    margin-left: 0; 
+  }
+  h1 {
+    margin-top: 70px;
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+  input {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  #reports-list {
+    width: 100%;
+    padding: 0 0 30px 0;;
+  }
+
+  .message-preview {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    padding: 12px 14px;
+    box-sizing: border-box;
+    overflow: hidden;        
+    gap: 8px;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .icon {
+    font-size: 11px;
+    flex-shrink: 0;  
+    width: 20px;   
+  }
+
+  .name {
+    font-size: 11px;
+    flex: 1;
+    min-width: 0;            
+    margin-left: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80px;  
+  }
+
+  .report-datetime {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .methods-container{
+    display: none !important;
+  }
+}
+
+/* --- TABLETS --- */
+@media (min-width:701px) and (max-width:1100px) {
+  .container{
+    padding: 0 40px;
+    margin-left: 0;
+  }
+  h1 {
+    margin-top: 70px;
+    max-width: 650px;
+    text-align: left; /* Alineado a la izquierda */
+  }
+
+  input {
+    width: 650px;
+    text-align: left;
+  }
+
+  .message-preview {
+    width: 650px;
+  }
+
+  .name {
+    font-size: 15px;
+    width: 150px;
+  }
+
+  .description {
+    font-size: 12px;
+  }
+
+  .report-id {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recording Audio Report - No Name Kitchen</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/style/audio.css">
+  <link rel="stylesheet" href="/style/general.css">
+</head>
+<body>
+  <button id="btnReturn" type="button" class="return-btn">
+    <i class="fa-solid fa-arrow-left return-icon"></i>
+    <span style="color: var(--text-dark);">Return</span>  
+  </button>
+  <div class="audio-container">
+  <header>
+    <h1>Audio Testimonial</h1>
+    <select id="mic-select">
+      <option value="" hidden>Select microphone</option>
+    </select>
+  </header>
+
+  <main class="recorder-layout">
+    <div class="controls">
+      <button id="record" title="Grabar"><i class="fa-solid fa-microphone"></i></button>
+      <button id="pause" title="Pausar" disabled><i class="fa-solid fa-pause"></i></button>
+      <p id="progress">00:00</p>
+    </div>
+
+    <div id="mic" class="waveform"></div>
+  </main>
+
+  <section class="transcription-box">
+    <h3>Transcripted Text:</h3>
+    <p id="transcription-text" class="placeholder">Transcript will appear here...</p>
+  </section>
+
+  <div id="review-section" style="display: none; margin-top: 20px; padding: 15px; border: 2px solid #4F4A85; border-radius: 8px;">
+    <h3 style="color: var(--text-dark);">Review and Edit Transcription if needed:</h3>
+    
+    <textarea id="final-text-editor" rows="6"></textarea>
+    
+    <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button id="btn-redo">
+            <i style="color: white;" class="fa-solid fa-rotate-right"></i> Delete & Try Again
+        </button>
+        
+        <button id="btn-save-next" class="save-btn">
+          <i style="color: white;" class="fa-solid fa-check"></i> Save
+        </button>
+
+        <button id="btn-save-finish" class="save-btn">
+          <i style="color: white;" class="fa-solid fa-flag-checkered"></i> Finish
+        </button>
+    </div>
+</div>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <button id="save-all" class="save-btn" disabled>
+      <i class="fa-solid fa-floppy-disk" style="color: white;"></i> Save Audio and Transcription
+    </button>
+  </div>
+  </div>  
+  <input type="checkbox" id="theme" style="display: none;">
+  <script src="/config.js"></script>
+  <script type="module" src="/audio.js"></script>
+  <script src="/sidebar.js"></script>
+  <script src="/translator.js"></script>
+</body>
+</html>

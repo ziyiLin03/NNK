@@ -1,0 +1,308 @@
+.audio-container { 
+  font-family: system-ui, -apple-system, sans-serif; 
+  padding: 20px; 
+  max-width: 820px; 
+  margin: auto; 
+  color: #333;
+}
+
+header { 
+  margin-bottom: 2rem; 
+}
+
+header h1 {
+  margin: 20px 0 20px 0;
+  width: 100%; 
+  max-width: 820px;
+  color: rgb(193, 18, 31);
+  text-align: left;
+  border-bottom: 2px solid rgb(193, 18, 31);
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background-color: var(--content-bg);
+  color: var(--text-dark);
+}
+
+option{
+  background-color: var(--content-bg);
+  color: var(--text-dark);
+}
+
+.recorder-layout {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--content-bg);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgb(162, 202, 206);
+  margin-bottom: 2rem;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.controls p {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin: 10px 0 0 0;
+  color: #555;
+}
+
+#record,
+#pause {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+  box-shadow: 0 2px 4px var(--shadow);
+  transition: all 0.2s ease;
+  color: var(--text-dark);
+}
+
+button:hover:not(:disabled) { transform: scale(1.05); }
+button:active:not(:disabled) { transform: scale(0.95); }
+button:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+#record { color: #dc3545; }
+#pause { color: #0d6efd; }
+
+.waveform {
+  flex-grow: 1;
+  min-width: 0;
+  height: 100px;
+  z-index: 0;
+}
+
+.transcription-box {
+  background: var(--content-bg);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgb(162, 202, 206);
+  min-height: 150px;
+  margin-bottom: 50px;
+}
+
+.transcription-box h3 {
+  margin-top: 0;
+  color: var(--text-dark);
+  border-bottom: 2px solid #eee;
+  margin-bottom: 5px;
+}
+
+#transcription-text,
+.transcription-box span {
+  font-size: 14px;
+  color: #aaa;
+  font-style: italic;
+}
+
+.transcription-box p {
+  margin: 8px 0 0 0;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.placeholder { color: #aaa; font-style: italic; }
+
+.save-btn {
+  width: auto;
+  height: auto;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background-color: rgb(193, 18, 31);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-color: #cc0000;
+  transform: scale(1.02);
+  box-shadow: 0 5px 2px rgba(0, 0, 0, 0.3);
+}
+
+.save-btn:disabled {
+  background-color: #e56868;
+  color: #ffffff;
+}
+
+#btn-redo,
+#btn-confirm {
+  color: white;
+  padding: 10px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  cursor: pointer;
+} 
+
+#final-text-editor {
+  width: 95%;
+  padding: 10px; 
+  border-radius: 5px;
+  margin: 10px;
+  background-color: var(--content-bg);
+  color: var(--text-dark);
+}
+
+#btn-redo {
+  background-color: rgb(193, 18, 31);
+}
+
+#btn-confirm {
+  background-color: rgb(18, 193, 18);
+}
+
+@media (max-width:500px){
+
+  .audio-container {
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    margin: 0;
+    max-width: 100%;
+  }
+  header h1 {
+    margin-top: 70px;
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .recorder-layout {
+    flex-direction: column;   /* apilamos controles y waveform */
+
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .controls {
+    flex-direction: row;      /* botones en fila en móvil */
+    gap: 15px;
+    min-width: unset;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .controls p {
+    font-size: 0.9rem;
+  }
+
+  #record,
+  #pause {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+  .waveform {
+    width: 100%;
+    height: 80px;
+  }
+  select,
+  option {
+    width: 100%;
+    font-size: 14px;
+  }
+  .transcription-box {
+    padding: 15px;
+    margin-bottom: 25px;
+  }
+  .transcription-box h3 {
+  font-size: 15px;
+}
+
+  #transcription-text {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  #final-text-editor {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+  }
+  .save-btn {
+    font-size: 1rem;
+    justify-content: center;
+  }
+}
+
+
+@media (min-width:701px) and (max-width:1100px){
+  .audio-container {
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    align-items: center;
+    margin: 0 ;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  header {
+    width: 100%;
+    max-width: 650px;
+    box-sizing: border-box;
+    margin-left: 0;
+  }
+  header h1 {
+    margin-top: 70px;
+    margin-left: 0;
+    width: 100%;
+    max-width: 650px;
+    text-align: left;
+
+  }
+
+  .recorder-layout,
+  .transcription-box,
+  #review-section,
+  select {
+    max-width: 650px;
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  .transcription-box{
+    margin-bottom: 20px;
+  }
+
+  .audio-container {
+    width: 100%;
+    padding: 0 45px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 100%;
+    width: 100%;
+  }
+  #final-text-editor {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 650px;
+    margin-left: 0;
+  }
+
+  .save-btn {
+    font-size: 1rem;
+  }
+}

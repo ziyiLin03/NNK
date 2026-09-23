@@ -1,0 +1,537 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+*{
+  font-family: "Inter", sans-serif;
+  color: black;
+  margin:0;
+  padding:0;
+}
+
+/* ==========================================
+   OCULTAR BARRA DE GOOGLE (NIVEL EXTREMO)
+   ========================================== */
+body {
+    top: 0px !important; 
+    position: static !important;
+}
+
+/* ==================================================== */
+/* FIX: EVITAR QUE GOOGLE TRANSLATE ROMPA LOS ESTILOS */
+/* ==================================================== */
+
+/* Obliga a las etiquetas inyectadas por Google a heredar tu color y fuente */
+font {
+    color: inherit !important;
+    font-family: inherit !important;
+}
+
+/* Opcional: Google a veces pone un fondo amarillo feo cuando pasas 
+   el ratón por encima del texto traducido. Esto lo desactiva: */
+.goog-text-highlight {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Oculta los iframes de la barra y las nuevas clases dinámicas de Google */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+iframe.skiptranslate,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+    display: none !important;
+}
+
+#goog-gt-tt, .goog-te-balloon-frame { 
+    display: none !important; 
+}
+
+.goog-text-highlight {
+    background-color: transparent !important;
+    border: none !important; 
+    box-shadow: none !important;
+}
+
+:root {
+  --bg-surface: #ffffff;
+  --input-bg: #f0f0f0;
+  --content-bg: #ffffff; /* Fondo de las tarjetas y elementos principales */
+  --primary: rgb(193, 18, 31); /* Azul/morado del Dashboard activo */
+  --secondary: #f4f7fe; /* Color de fondo al hacer hover */
+  --text-muted: #a3aed1; /* Gris para botones inactivos */
+  --text-dark:black; /* Color de texto principal */
+  --text-sub:#666;
+  --border-dark: black;
+  --brand-red: #c1121f; 
+  --border-radius-md: 12px;
+  --divider-color: #e9edf7;
+  --audio-bg:  #f8f9fa;
+  --shadow: rgba(0, 0, 0, 0.3); /* Sombra con el color primario para un efecto más integrado */
+}
+
+/* ==========================================
+   VARIABLES DEL MODO OSCURO
+========================================== */
+body.dark {
+  --bg-surface: #000000; /* Fondo del sidebar y settings en oscuro */
+  --input-bg: #2D2D2D; 
+  --content-bg: #383838; /* Fondo de las tarjetas y elementos principales */
+  --primary: rgb(193, 18, 31); /* Un morado un poco más brillante para que destaque en oscuro */
+  --secondary: #4e0404; /* Fondo de los botones al hacer hover */
+  --text-muted: #8f9bba; /* Gris para textos inactivos */
+  --text-sub: #aaa;
+  --text-dark: #ffffff; /* Textos principales en blanco */
+  --border-dark: #ffffff; 
+  --audio-bg: gray;
+  --divider-color: rgb(193, 18, 31); /* Color de las líneas separadoras en oscuro */
+  --shadow: rgba(255, 255, 255, 0.3); /* Sombra con el color primario para un efecto más integrado */
+  background-color: #1f1c1c; /* Color del fondo principal de la página */
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--secondary);
+}
+
+/* ==========================================
+   BARRA LATERAL PRINCIPAL
+========================================== */
+
+.logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            padding:30px 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+.side-bar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 260px;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--divider-color);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  
+  /* Animación para móvil */
+  transform: translateX(-100%);
+  transition: transform .3s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+.side-bar.active {
+  transform: translateX(0);
+}
+
+/* Evitar que los enlaces rompan el Flexbox */
+.side-bar a {
+  text-decoration: none;
+  display: block;
+}
+
+/* --- ZONAS INTERIORES --- */
+.side-bar-grid {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px; /* Padding interno solo para los botones */
+  flex-grow: 1;
+}
+
+.side-bar-grid-end {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 20px 20px;
+  margin-top: auto;
+}
+
+/* Línea separadora */
+.menu-divider {
+  height: 1px;
+  background-color: var(--divider-color);
+  margin: 10px 0 15px 0;
+}
+
+/* ==========================================
+   BOTONES Y FILAS (INACTIVOS)
+========================================== */
+.side-bar-row,
+#settings-btn {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+  border-radius: var(--border-radius-md);
+  color: var(--text-muted); 
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.side-bar-icons,
+.side-bar-configuration {
+  font-size: 18px;
+  width: 25px; /* Fijamos el ancho para que los textos se alineen */
+  text-align: left;
+  margin-right: 10px;
+  transition: transform .25s, color .25s;
+  color: var(--text-muted);
+}
+
+.row-text {
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* --- HOVER --- */
+.side-bar-row:hover,
+#settings-btn:hover {
+  background-color: var(--secondary);
+}
+
+.side-bar-row:hover .side-bar-icons,
+.side-bar-row:hover .row-text {
+  color: var(--primary);
+}
+
+/* ==========================================
+   ESTADO ACTIVO (DASHBOARD)
+========================================== */
+.side-bar-row.active-item {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: 0 4px 15px var(--shadow); /* Sombra morada */
+}
+
+.side-bar-row.active-item .row-text,
+.side-bar-row.active-item .side-bar-icons {
+  color: white;
+}
+
+.side-bar-row.active-item:hover {
+  background-color: #4e0404; /* Un poco más oscuro al pasar el ratón */
+  color: white;
+}
+
+/* ==========================================
+   BOTÓN SIGN OUT
+========================================== */
+
+.side-bar-row.sign-out-row .row-text,
+.side-bar-row.sign-out-row .side-bar-icons {
+  color: red;
+}
+
+
+/* ==========================================
+   MENÚ DE SETTINGS (PANEL DESLIZABLE)
+========================================== */
+.settings-box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: -100%; /* Oculto a la derecha por defecto */
+  background-color: var(--bg-surface);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 60px 20px; /* Igualamos el padding al del sidebar principal */
+  box-sizing: border-box;
+  transition: all .3s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  z-index: 100;
+}
+
+.settings-box.active {
+  right: 0; /* Se desliza hacia la vista */
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Evita que el enlace de 'About Us' rompa el estilo */
+.settings-box a {
+  text-decoration: none;
+  display: block;
+}
+
+/* ==========================================
+   FILAS DE SETTINGS (Igual que los botones del menú)
+========================================== */
+.settings-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px; /* Mismas proporciones que los botones principales */
+  margin-bottom: 6px; /* Mismo espaciado */
+  border-radius: var(--border-radius-md); /* Mismo borde redondeado */
+  color: var(--text-muted); /* Gris apagado por defecto */
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+/* Hover: Mismo efecto azul/morado que en la Sidebar */
+.settings-row:hover {
+  background-color: var(--secondary);
+}
+
+.settings-row:hover .settings-icon,
+.settings-row:hover .settings-text {
+  color: var(--primary); 
+}
+
+/* ==========================================
+   ICONOS Y TEXTO DE SETTINGS
+========================================== */
+.settings-icon {
+  font-size: 18px; /* Mismo tamaño que en la sidebar */
+  width: 25px; /* Fijamos el ancho exacto para que el texto alinee perfecto */
+  text-align: left;
+  margin-right: 10px;
+  color: inherit; /* Hereda el color (gris o primario al hacer hover) */
+  transition: transform .25s, color .25s;
+}
+
+.settings-text {
+  font-size: 15px; /* Mismo tamaño de fuente */
+  font-weight: 500;
+  margin: 0;
+  color: inherit;
+  flex-grow: 1; /* Permite que ocupe el resto del espacio */
+}
+
+/* Ajuste especial para el selector de idioma para que herede el estilo perfecto */
+#language-select {
+  appearance: none; /* Quita la flecha fea por defecto de los navegadores (opcional) */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: inherit;
+  width: 100%;
+}
+
+#language-select option {
+  color: var(--text-dark); /* Para que las opciones se lean bien al desplegar */
+  background-color: var(--bg-surface);
+}
+
+/* ==========================================
+   SWITCH INVISIBLE (Tema Oscuro)
+========================================== */
+.switch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Lo hacemos 100% transparente */
+  cursor: pointer;
+  margin: 0;
+  z-index: 2; /* Nos aseguramos de que el clic caiga sobre el input */
+}
+
+/* ==========================================
+   BOTÓN MENÚ MÓVIL (FUERA DEL SIDEBAR)
+========================================== */
+#menu-btn,
+.return-btn {
+  top: 15px; 
+  left: 15px; 
+  z-index: 20; 
+  position: fixed;  
+  border: none; 
+  background-color: var(--bg-surface); 
+  padding: 8px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+/* --- ESTILOS PARA LA NOTIFICACIÓN DEL CHAT --- */
+.chat-notification-badge {
+    background-color: #d32f2f; /* El rojo de tu botón Sign out / Home */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto; /* Esto lo empuja a la derecha del menú */
+    padding: 0 6px; /* Un poco de padding por si el número es mayor a 9 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+#menu-btn.dissapear {
+  display: none;
+}
+
+.return-icon,
+.menu-icon {
+  font-size: 16px; 
+  color: var(--text-dark); 
+  margin-right: 5px;
+}
+
+/*PROFILE*/
+.profile-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-modal-overlay.active {
+  display: flex;
+}
+
+.profile-modal {
+  width: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+/* Cruz */
+.profile-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-dark);
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s;
+}
+
+.profile-close i {
+  color: white !important;  
+}
+
+.profile-close:hover {
+  transform: scale(1.2);
+}
+
+/* Parte superior roja */
+.profile-top {
+  background-color: rgb(193, 18, 31);
+  padding: 30px 20px 40px 20px;
+  text-align: center;
+}
+
+.profile-welcome {
+  color: white;
+  font-size: 14px;
+  margin: 0 0 4px 0;
+}
+
+.profile-username {
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Parte inferior gris */
+.profile-bottom {
+  background-color: #f0f0f0;
+  padding: 0 20px 25px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.dark .profile-bottom {
+  background-color: #2d2d2d;
+}
+
+/* Tarjeta blanca */
+.profile-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px 30px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: -25px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.dark .profile-card {
+  background-color: #3a3a3a;
+}
+
+/* Icono del rol */
+.profile-role-icon {
+  font-size: 40px;
+  color: rgb(193, 18, 31);
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* Etiqueta del rol */
+.profile-role-badge {
+  display: inline-block;
+  background-color: #e4e4e4;
+  color: #555;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dark .profile-role-badge {
+  background-color: #555;
+  color: #ccc;
+}
+
+/* Línea separadora roja */
+.profile-divider {
+  border: none;
+  border-top: 2px solid rgb(193, 18, 31);
+  margin: 16px 0;
+  width: 100%;
+}
+
+/* info perm */
+.profile-permissions {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  line-height: 1.4;
+  text-align: center;
+  padding: 0 10px;
+  font-style: italic;
+}
+
+/* ==========================================
+   MEDIA QUERIES
+========================================== */
+@media (max-width: 500px) {
+  .side-bar { 
+    width: 250px; 
+  }
+}

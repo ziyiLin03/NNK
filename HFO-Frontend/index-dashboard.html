@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HFO Analytics</title>
+  <link rel ="stylesheet" href="style/general.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+  <link rel="stylesheet" href="style/theme.css"/>
+  <link rel="stylesheet" href="style/dashboard2.css"/>
+  <script defer src="/config.js"></script>
+  <script defer src="/dashboard-prefs.js"></script>
+  <script defer src="/api.js"></script>
+  <script defer src="/i18n.js"></script>
+  <script defer src="/help-tooltips.js"></script>
+  <script defer src="/home2.js"></script>
+  <script defer src="/sidebar.js"></script>
+</head>
+<body>
+  <button class="return-btn" onclick="window.location.href='/dashboard.html'">
+  <i class="fa-solid fa-arrow-left return-icon"></i>
+  <span style="color: var(--text-dark);">Return</span>  
+  </button>
+  <main class="home">
+    <div class="top-settings">
+      <div class="settings-group">
+        <label for="languageSelect">Language</label>
+        <select id="languageSelect">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
+      <button type="button" id="themeToggleBtn" data-theme-toggle class="button">Dark mode</button>
+    </div>
+
+    <h1>HFO Analytics</h1>
+    <p class="subtitle" data-i18n="home.subtitle">Dashboards backed by Python-generated KPI contracts and an optional local Python API.</p>
+
+    <section class="analysis-load-card" aria-labelledby="analysisLoadTitle">
+      <div class="analysis-load-header">
+        <div>
+          <div class="eyebrow" data-i18n="home.initial_load_kicker">INITIAL DATA LOAD</div>
+          <h2 id="analysisLoadTitle" data-i18n="home.initial_load_title">Database GET window</h2>
+          <p data-i18n="home.initial_load_text">Choose the large date window that would be requested from the database. Dashboard filters will work inside this loaded dataset.</p>
+        </div>
+        <div id="savedAnalysisWindow" class="analysis-saved-state warning">—</div>
+      </div>
+
+      <div id="analysisWindowSummary" class="analysis-summary">Loading dataset metadata...</div>
+
+      <div class="analysis-form-grid">
+        <label>
+          <span data-i18n="home.from">From</span>
+          <input type="date" id="analysisFrom"/>
+        </label>
+        <label>
+          <span data-i18n="home.to">To</span>
+          <input type="date" id="analysisTo"/>
+        </label>
+        <label>
+          <span data-i18n="home.max_records">Recommended max records</span>
+          <input type="number" id="analysisMaxRecords" min="1" max="100000" step="500" value="6000"/>
+          <small class="field-hint" data-i18n="home.max_records_hint">Used as a performance warning threshold. You can continue even if the estimate is higher.</small>
+        </label>
+      </div>
+
+      <div id="analysisWindowStatus" class="status">Loading dataset metadata...</div>
+
+      <div class="analysis-actions">
+        <button type="button" class="button primary" id="saveAnalysisWindowBtn" data-i18n="home.save_window">Save load window</button>
+        <!-- <button type="button" class="button" id="refreshAnalysisEstimateBtn" data-i18n="home.refresh_check">Check size</button> -->
+        <!-- <button type="button" class="button" id="useFullDatasetBtn" data-i18n="home.use_full_dataset">Use full dataset</button> -->
+        <!-- <button type="button" class="button" id="clearAnalysisWindowBtn" data-i18n="home.clear_window">Clear saved window</button> -->
+      </div>
+    </section>
+
+    <div class="home-grid">
+      <a class="home-card" data-requires-analysis-window href="/operational_kpis_dashboard.html">
+        <strong>Volume &amp; Coverage</strong>
+        <span>Operational KPIs, time series, activity curve and regional coverage.</span>
+      </a>
+      <a class="home-card" data-requires-analysis-window href="/demographics_dashboard.html">
+        <strong>Demographics</strong>
+        <span>Weighted demographic, vulnerability and health distributions.</span>
+      </a>
+      <a class="home-card" data-requires-analysis-window href="/dashboard_02_incident_needs.html">
+        <strong>Incident &amp; Needs</strong>
+        <span>Incident frequency, detected needs and event type distribution by region.</span>
+      </a>
+      <a class="home-card" data-requires-analysis-window href="/dashboard_04_mobility_route.html">
+        <strong>Mobility Evidence</strong>
+        <span>Approximate distance from ordered trajectory points and mobility evidence by zone.</span>
+      </a>
+    </div>
+  </main>
+
+   <!-- Modal de perfil -->
+<div class="profile-modal-overlay" id="profileModal">
+  <div class="profile-modal">
+    <button class="profile-close" id="profileClose">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="profile-top">
+      <p class="profile-welcome">Welcome,</p>
+      <p class="profile-username" id="profileUsername">username</p>
+    </div>
+    <div class="profile-bottom">
+      <div class="profile-card">
+        <i class="profile-role-icon" id="profileIcon"></i>
+        <span class="profile-role-badge" id="profileRole">Volunteer</span>
+        <div class="profile-divider"></div>
+        <!--<p class="profile-since">Member since: <span id="profileDate">January 2025</span></p>-->
+        <p class="profile-permissions" id="profilePermissions"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

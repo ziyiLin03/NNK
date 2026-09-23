@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Capture - No Name Kitchen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style/take-picture.css">
+    <link rel="stylesheet" href="style/general.css">
+</head>
+<body>
+    <a href="/camera.html">
+      <button id="menu-btn">
+        <i class="fa-solid fa-arrow-left return-icon"></i>
+        <span style="color: var(--text-dark);">Return</span>  
+      </button>
+    </a>
+
+    <div class="container">
+      <div class="content-grid">
+        <h1>Photo Testimonial</h1> 
+        <div class="photos-col">  
+          <div class="take-photo-grid">
+          <input type="file" accept="image/*" capture="environment" id="mobile-input" style="display: none;">
+  
+          <video id="video" autoplay playsinline></video>
+          <div class="photo-buttons">
+          <button id="switch-camera-btn" class="switch-btn">
+            <i class="fa-solid fa-camera-rotate icons"></i> Mirror camera
+          </button>
+          <button id="captureButton">
+            <i class="fa-solid fa-camera icons"></i>  Take Photo
+          </button>
+          </div>
+          </div>
+    
+          <div id="photo-grid">
+            <canvas id="canvas" style="display:none;"></canvas>
+            <img id="photo">
+            <div class="photo-buttons">
+              <button id="retake-button">
+                <i class="fa-solid fa-xmark icons"></i>  Retake
+              </button>
+              <button id="continue-button">Continue</button>
+              <button id="save-button">
+                <i class="fa-solid fa-images icons"></i>  Save
+              </button>
+            </div>
+          </div>
+
+          <dialog id="save-modal">
+            <h3>Save Photo</h3>
+            <p id="modalDesc">Enter a title for this photo</p>
+            <input type="text" id="dialog-title" placeholder="Title" style="margin-bottom: 10px;" autocomplete="off">
+            <div class="modal-buttons">
+              <button id="modal-cancel">Cancel</button>
+              <button id="modal-save">Save</button>
+            </div>
+          </dialog>
+
+        </div>
+      </div>
+    </div>
+    <input type="checkbox" id="theme" style="display: none;">
+    <script src="/config.js"></script>
+    <script src="/take-picture.js"></script>
+    <script src="/sidebar.js"></script>
+    <script src="/translator.js"></script>
+</body>
+</html>

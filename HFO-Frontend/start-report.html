@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/general.css">
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Start Report - No Name Kitchen</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  </head>
+
+  <body>
+  <a href="/home.html">
+    <button class="return-btn">
+      <i class="fa-solid fa-arrow-left return-icon"></i>
+      <span style="color: var(--text-dark);">Return</span>  
+    </button>
+  </a>
+
+  <div class="container">
+      <h1>Start Testimonial</h1>
+      
+      <div id="step-1">
+        <h4>Who are you reporting about?</h4>
+        <div class="alert-grid">
+          <a style="text-decoration: none; cursor: pointer;" id="btnSingle">
+            <div class="selection">
+              <i class="fa-solid fa-user icon"></i>
+              <p class="text">Single Person</p>
+            </div>
+          </a>
+          <a style="text-decoration: none; cursor: pointer;" id="btnGroup">
+            <div class="selection">
+              <i class="fa-solid fa-users icon"></i>
+              <p class="text">Group</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div id="step-2" style="display: none;">
+        <h4>Choose the type of interview</h4>
+        <div class="alert-grid">
+          <a style="text-decoration: none; cursor: pointer;" id="btnJourney">
+            <div class="selection">
+              <i class="fa-solid fa-route icon"></i>
+              <p class="text">Journey</p>
+            </div>
+          </a>
+          <a style="text-decoration: none; cursor: pointer;" id="btnWatchdog">
+            <div class="selection">
+              <i class="fa-solid fa-eye icon"></i>
+              <p class="text">Watchdog</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+  </div>
+
+  <input type="checkbox" id="theme" style="display: none;">
+  
+  <div id="groupModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 id="modalTitle">Group Report</h3>
+      <p id="modalDesc">Enter the details below.</p>
+      
+      <input type="text" id="personNameInput" placeholder="Name" style="margin-bottom: 10px;" autocomplete="off" required>
+      <input type="number" id="groupSizeInput" min="2" placeholder="Number of People" style="display: none; margin-bottom: 20px;" autocomplete="off" required>
+      
+      <div class="modal-buttons">
+        <button id="btnCancelGroup" class="btn-cancel">Cancel</button>
+        <button id="btnContinueGroup" class="btn-continue">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/config.js"></script>
+  <script src="/sidebar.js"></script>
+  <script src="/index.js"></script>
+  <script src="/translator.js"></script>
+  </body>
+</html>

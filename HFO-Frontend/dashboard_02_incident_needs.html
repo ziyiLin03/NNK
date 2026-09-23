@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HFO Analytics - Incident &amp; Needs</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style/theme.css"/>
+  <link rel="stylesheet" href="style/dashboard2.css"/>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+  <style>
+    .how-to-read{font-size:12px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:12px;line-height:1.55;}
+    .insight{font-size:13px;color:var(--ok);margin-top:8px;padding:8px 12px;background:rgba(117,214,160,0.07);border-radius:8px;border-left:3px solid var(--ok);line-height:1.5;}
+    .intro-box{font-size:13px;line-height:1.7;padding:12px 16px;background:rgba(98,182,255,0.07);border:1px solid rgba(98,182,255,0.2);border-radius:12px;margin-bottom:12px;color:var(--text);}
+    .summary-box{font-size:13px;line-height:1.7;padding:10px 14px;background:rgba(98,182,255,0.07);border:1px solid rgba(98,182,255,0.2);border-radius:10px;margin-bottom:12px;color:var(--text);}
+    .tab-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+    .filter-sub-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;padding:8px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;}
+    .filter-sub-row label{font-size:12px;color:var(--muted);}
+    .csel{background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font:inherit;cursor:pointer;}
+  </style>
+  <script defer src="/config.js"></script>
+  <script defer src="/dashboard-prefs.js"></script>
+  <script defer src="/i18n.js"></script>
+  <script defer src="/help-tooltips.js"></script>
+  <script defer src="/api.js"></script>
+  <script defer src="/formatters.js"></script>
+  <script defer src="/filters.js"></script>
+  <script defer src="/charts.js"></script>
+  <script defer src="/export.js"></script>
+  <script defer src="/incident-needs-dashboard.js"></script>
+  <script defer src="/sidebar.js"></script>
+  
+</head>
+<body>
+  <div class="page">
+
+    <div class="top-settings">
+      <div class="settings-group">
+        <label for="languageSelect">Language</label>
+        <select id="languageSelect"><option value="en">English</option><option value="es">Español</option></select>
+      </div>
+      <div class="top-actions">
+        <button type="button" id="exportPagePdfBtn" class="button primary" data-export-exclude="true" data-i18n="lbl.export_pdf">Export PDF report</button>
+        <button type="button" id="themeToggleBtn" data-theme-toggle class="button" data-i18n="lbl.dark_mode">Dark mode</button>
+      </div>
+    </div>
+
+        <nav class="page-index">
+      <span>Dashboards</span>
+      <a href="/index-dashboard.html">Home</a>
+      <a href="/operational_kpis_dashboard.html">Volume &amp; Coverage</a>
+      <a href="/demographics_dashboard.html">Demographics</a>
+      <a class="active" href="/dashboard_02_incident_needs.html">Incident &amp; Needs</a>
+      <a href="/dashboard_04_mobility_route.html">Mobility Evidence</a>
+      <span style="color:var(--line);margin:0 4px">|</span>
+      <a href="/dashboard.html" style="color:var(--muted);font-size:12px">Return to main website</a>
+    </nav>
+
+    <h1>Incident &amp; Needs</h1>
+    <p class="subtitle">Field events recorded by volunteers · incident frequency, needs and temporal patterns · source: events.json</p>
+
+    <div class="layout">
+
+      <aside class="sidebar">
+        <h2 class="section-title">Filters</h2>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.time_window">Time window</div>
+          <div id="timeFilterButtons" class="filter-row">
+            <button type="button" class="filter-button" data-range="last1">24h</button>
+            <button type="button" class="filter-button" data-range="last7">7d</button>
+            <button type="button" class="filter-button" data-range="last30">30d</button>
+            <button type="button" class="filter-button" data-range="last90">90d</button>
+            <button type="button" class="filter-button" data-range="last180">180d</button>
+            <button type="button" class="filter-button" data-range="last365">365d</button>
+            <button type="button" class="filter-button" data-range="all">All</button>
+            <button type="button" class="filter-button" data-range="custom">Custom</button>
+          </div>
+          <div class="range-inputs"><input id="customFrom" type="date"/><input id="customTo" type="date"/></div>
+        </div>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.granularity">Granularity</div>
+          <div id="granularityButtons" class="filter-row"></div>
+        </div>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.regions">Regions</div>
+          <div id="regionFilterButtons" class="filter-row"></div>
+        </div>
+        <div class="filter-group">
+          <button type="button" class="button" onclick="window.HFOPrefs.reset()" data-i18n="lbl.reset_filters">Reset filters</button>
+        </div>
+        <div class="meta-boxes">
+          <div class="mini-box"><div class="k" data-i18n="lbl.source">Source</div><div id="metaSource" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.loaded_window">Loaded window</div><div id="metaWindow" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.dataset_coverage">Dataset coverage</div><div id="metaDataset" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.selected_regions">Selected regions</div><div id="metaRegions" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.status">Status</div><div id="dashboardStatus" class="status">—</div></div>
+        </div>
+      </aside>
+
+      <main class="main">
+
+        <div class="intro-box" id="introBox" data-i18n="Loading summary…">Loading summary…</div>
+
+        <section class="cards">
+          <div class="card"><div class="label" data-i18n="Events in window">Events in window</div><div id="kpiEvents" class="value">—</div></div>
+          <div class="card"><div class="label">People affected</div><div id="kpiPeople" class="value">—</div></div>
+          <div class="card"><div class="label">Active regions</div><div id="kpiRegions" class="value">—</div></div>
+          <div class="card"><div class="label" data-i18n="Incident types tracked">Incident types tracked</div><div id="kpiTypes" class="value">—</div></div>
+        </section>
+
+        <div id="emptyState" class="empty-state hide">No data matches the current filters.</div>
+
+        <!-- Events over time -->
+        <section class="panel">
+          <h2 data-i18n="h2.events_time">Events over time</h2>          <div class="how-to-read" id="howToTime"></div>
+          <div class="chart-wrap tall"><canvas id="timeChart"></canvas></div>
+          <p class="insight" id="timeInsight"></p>
+        </section>
+
+        <!-- Incident rate -->
+        <div class="grid-two">
+          <section class="panel">
+            <h2 data-i18n="h2.incident_rate">Incident rate</h2>            <div class="how-to-read" id="howToRate"></div>
+            <div class="chart-wrap tall"><canvas id="rateChart"></canvas></div>
+            <p class="insight" id="rateInsight"></p>
+          </section>
+
+          <section class="panel">
+            <h2 data-i18n="h2.event_types">Event types</h2>
+            <div class="how-to-read" id="howToPt"></div>
+            <div class="chart-wrap tall"><canvas id="ptChart"></canvas></div>
+            <p class="insight" id="ptInsight"></p>
+          </section>
+        </div>
+
+        <!-- Incident detail -->
+        <section class="panel">
+          <h2 data-i18n="h2.incident_detail">Incident detail</h2>
+          <div class="how-to-read" id="howToTable"></div>
+          <div id="tagSummaryBox" class="summary-box"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Incident type</th>
+                  <th>Category</th>
+                  <th class="number">Events</th>
+                  <th class="number">People</th>
+                  <th class="number">%</th>
+                </tr>
+              </thead>
+              <tbody id="tagTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+      
+        <!-- Data quality panel -->
+        <section class="panel">
+          <h2 data-i18n="h2.data_quality" styles="">Data quality <span style="font-size:13px;color:var(--muted);font-weight:400" data-i18n="lbl.field_completeness">— field completeness</span></h2>
+          <div class="how-to-read" data-i18n="lbl.dq_howto">Completeness of critical fields in the loaded dataset. <strong>★ Required fields</strong> affect the reliability of this dashboard directly. 🔴 &lt;70% · 🟠 &lt;90% · 🟢 ≥90%</div>
+          <div id="dqCompletenessBar" style="margin-bottom:12px;"></div>
+          <div id="dqSummaryBox" style="font-size:13px;line-height:1.7;padding:10px 14px;background:rgba(255,193,7,0.07);border:1px solid rgba(255,193,7,0.2);border-radius:10px;margin-bottom:12px;color:var(--text);"></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th data-i18n="lbl.th_field">Field</th><th class="number" data-i18n="lbl.th_filled">Filled</th><th class="number" data-i18n="lbl.th_missing">Missing</th><th class="number" data-i18n="lbl.th_completeness">Completeness</th></tr></thead>
+              <tbody id="dqTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

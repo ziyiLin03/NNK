@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style/general.css">
+    <link rel="stylesheet" href="/style/new-report.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>New Report - No Name Kitchen</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  </head>
+  <body>
+  <button class="return-btn" id="btnQuitReport">
+  <i class="fa-solid fa-arrow-left return-icon"></i>
+  <span style="color: var(--text-dark);">Return</span>  
+  </button>
+    <div class="menu">
+      <h1 id="title-new-edit">New Testimonial </h1>
+      <div class="grid">
+        
+        <a style="text-decoration: none;" href="/map.html">
+          <div class="application">
+            <div>
+              <i class="fa fa-map-location-dot application-icon"></i>
+            </div>
+            <div>
+              <p class="application-info">MAP</p>
+            </div>
+            <div class="bottom-line"></div>
+            <p class="description">
+              Share with us your journey
+            </p>
+          </div>
+        </a>
+        
+        <a style="text-decoration: none;" href="/audio-list.html">
+          <div class="application">  
+            <div>
+              <i class="fa-solid fa-microphone application-icon"></i>
+            </div>
+            <div>
+              <p class="application-info">AUDIO</p>
+            </div>
+            <div class="bottom-line"></div>
+            <p class="description">
+              Make a report with your voice
+            </p>
+          </div>
+        </a>
+
+        <a id="btnManualReport" style="text-decoration: none;" href="/manual-report.html">
+          <div class="application">
+            <div>
+              <i class="fa-solid fa-pen-to-square application-icon"></i>
+            </div>
+            <div>
+              <p class="application-info">MANUAL</p>
+            </div>
+            <div class="bottom-line"></div>
+            <p class="description">
+              Help us to understand the situation
+            </p>
+          </div>
+        </a>
+
+        <a style="text-decoration: none;" href="/camera.html">
+          <div class="application">
+            <div>
+              <i class="fa-solid fa-camera application-icon"></i>
+            </div>
+            <div>
+              <p class="application-info">CAMERA</p>
+            </div>
+            <div class="bottom-line"></div>
+            <p class="description">
+              Upload some evidence
+            </p>
+          </div>
+        </a>
+
+        </div>
+
+        <div class="action-buttons-container">
+        
+        <button id="btnSave" class="action-btn">
+         <i class="fa-solid fa-save"></i> Save it
+        </button>
+        
+        <button id="btnSubmit" class="action-btn">
+          <i class="fa-solid fa-paper-plane"></i> Submit
+        </button>
+
+      </div>
+
+    </div>
+    <input type="checkbox" id="theme" style="display: none;">
+    <script src="/config.js"></script>
+    <script src="/sidebar.js"></script>
+    <script src="/new-report.js"></script>
+    <script src="/translator.js"></script>
+  </body>
+</html>

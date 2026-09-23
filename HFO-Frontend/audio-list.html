@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Reports - No Name Kitchen</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="stylesheet" href="/style/general.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .audios-wrapper {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 20px 0px 80px 0px;
+    }
+
+    .audios-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .audios-header h1 {
+    color: rgb(193, 18, 31);
+    border-bottom: 2px solid rgb(193, 18, 31);
+    width: 100%; /* Cambiado para que sea fluido */
+    max-width: 820px; /* El tope máximo para pantallas grandes */
+    box-sizing: border-box;
+    text-align: left;
+    margin: 20px 0 0 0;
+    }
+
+    .audio-counter {
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .audio-card {
+      background: var(--content-bg, #fff);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 1px solid var(--divider-color, #e9edf7);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .audio-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .audio-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-dark, #111);
+    }
+
+    .audio-date {
+      font-size: 0.75rem;
+      color: var(--text-muted, #888);
+    }
+
+    .delete-audio-btn {
+      background: none;
+      border: none;
+      color: #c1121f;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .delete-audio-btn:hover { background: rgba(193,18,31,0.08); }
+
+    audio {
+      width: 100%;
+      margin: 8px 0;
+    }
+
+    .transcription-block {
+      background: var(--audio-bg, #f8f9fa);
+      border-left: 3px solid #c1121f;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--text-dark, #333);
+    }
+
+    .translation-block {
+      background: var(--audio-bg, #f8f9fa);
+      border-left: 3px solid #4a90d9;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--text-dark, #333);
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--text-muted, #aaa);
+      padding: 60px 20px;
+      font-size: 0.95rem;
+    }
+    .empty-state i { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+
+    .add-btn {
+      position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: rgb(193, 18, 31);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color .2s, transform .2s;
+    z-index: 10;
+    border: none !important;
+    }
+
+    .add-btn i {
+    color: white;
+    font-size: 24px;
+}
+
+.add-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+}
+  </style>
+</head>
+<body>
+
+  <input type="checkbox" id="theme" style="display: none;">
+
+  <div class="audios-wrapper">
+    <div class="audios-header">
+      <button class="return-btn" onclick="window.location.href='/new-report.html'">
+        <i class="fa-solid fa-arrow-left return-icon"></i>
+        <span style="color: var(--text-dark);">Return</span>
+      </button>
+      <h1>Audio Clips</h1>
+    </div>
+
+    <p class="audio-counter" id="audioCounter">0/ 5 clips saved</p>
+
+    <div id="audioList"></div>
+  </div>
+
+  <!-- FAB: add new audio -->
+  <button class="add-btn" id="addBtn" onclick="window.location.href='/audio-report.html'">
+    <i style="color: white" class="fa-solid fa-plus"></i>
+  </button>
+
+  <script src="/config.js"></script>
+  <script src="/sidebar.js"></script>
+  <script src="/translator.js"></script>
+  <script>
+    const BASE_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '';
+    const getToken = () => localStorage.getItem('access_token');
+    const MAX_AUDIOS = 5;
+
+    const audioList    = document.getElementById('audioList');
+    const audioCounter = document.getElementById('audioCounter');
+    const addBtn       = document.getElementById('addBtn');
+
+    async function deleteAudio(url, index) {
+      if (!confirm('Delete this audio clip?')) return;
+
+      try {
+        const token = getToken();
+        await fetch(`${BASE_URL}/api/delete-audio/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ url })
+        });
+      } catch (err) {
+        console.warn('Could not delete from Cloudinary:', err);
+      }
+
+      let borrador = JSON.parse(localStorage.getItem('reporteBorrador')) || {};
+      borrador.audios = borrador.audios || [];
+      borrador.audios.splice(index, 1);
+      localStorage.setItem('reporteBorrador', JSON.stringify(borrador));
+
+      render();
+    }
+
+    function render() {
+      const borrador = JSON.parse(localStorage.getItem('reporteBorrador')) || {};
+      const audios   = borrador.audios || [];
+
+      audioCounter.textContent = `${audios.length}/ ${MAX_AUDIOS} clips saved`;
+
+    // Disable add button at limit
+      if (audios.length >= MAX_AUDIOS) {
+        addBtn.disabled = true;
+        addBtn.title    = `Maximum of ${MAX_AUDIOS} audio clips reached`;
+      } else {
+        addBtn.disabled = false;
+        addBtn.title    = '';
+      }
+
+      if (audios.length === 0) {
+        audioList.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-solid fa-microphone-slash"></i>
+            No audio clips saved yet.<br>Tap the button below to record one.
+          </div>`;
+        return;
+      }
+
+      audioList.innerHTML = '';
+      audios.forEach((audio, idx) => {
+        const card = document.createElement('div');
+        card.className = 'audio-card';
+
+        const date = audio.timestamp
+          ? new Date(audio.timestamp).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+          : '';
+
+        card.innerHTML = `
+          <div class="audio-card-header">
+            <div>
+              <p class="audio-title">${audio.title || 'Audio ' + (idx + 1)}</p>
+              <p class="audio-date">${date}</p>
+            </div>
+            <button class="delete-audio-btn" data-idx="${idx}" title="Delete">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <audio controls src="${audio.url}"></audio>
+          ${audio.transcription
+            ? `<div class="transcription-block">
+                 <strong style="font-style:normal;"><i class="fa-solid fa-quote-left"></i> Transcription:</strong><br>
+                 "${audio.transcription}"
+               </div>`
+            : ''}
+          ${audio.translation
+            ? `<div class="translation-block">
+                 <strong><i class="fa-solid fa-language"></i> Translation:</strong><br>
+                 ${audio.translation}
+               </div>`
+            : ''}
+        `;
+
+        card.querySelector('.delete-audio-btn').addEventListener('click', () => {
+          deleteAudio(audio.url, idx);
+        });
+
+        audioList.appendChild(card);
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>

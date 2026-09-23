@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database - No Name Kitchen</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/style/general.css">
+    <link rel="stylesheet" href="/style/database.css">
+</head>
+<body>
+
+<button id="menu-btn">
+  <i class="fa-solid fa-bars menu-icon"></i>
+  <span style="color: var(--text-dark);">Menu</span>  
+</button>
+
+<div class="side-bar" id="sideBar">
+
+  <div class="logo">
+    <img style="width: 100%" src="assets/no-name-kitchen-letters.png" alt="">
+  </div>
+
+  <div class="side-bar-grid">
+    <a  href="/home.html" style="text-decoration: none;">
+      <div class="side-bar-row">
+        <i class="side-bar-icons fa-solid fa-home"></i>
+        <span class="row-text">Home</span>
+      </div>
+    </a>
+
+    <a href="/start-report.html" id="nav-create" style="text-decoration: none;">
+      <div class="side-bar-row">
+        <i class="side-bar-icons fa-solid fa-plus"></i>
+        <span class="row-text">New Testimonial</span>
+      </div>
+    </a>
+
+    <a href="/chat.html" id="nav-chat" style="text-decoration: none;">
+  <div class="side-bar-row">
+    <div style="display: flex; align-items: center; width: 100%;">
+      <i class="side-bar-icons fa-regular fa-comments"></i>
+      <span class="row-text">Chat</span>
+      <span id="chat-badge" class="chat-notification-badge" style="display: none;">0</span>
+    </div>
+  </div>
+</a>
+
+    <a href="/database.html" id="nav-database" style="text-decoration: none;">
+      <div class="side-bar-row active-item">
+        <i class="side-bar-icons fa-solid fa-database"></i>
+        <span class="row-text">Database</span>
+      </div>
+    </a>
+
+    <a href="/user-management.html" id="nav-user-management" style="text-decoration: none;">
+      <div class="side-bar-row">
+        <i class="side-bar-icons fa-solid fa-users"></i>
+        <span class="row-text">User Management</span>
+      </div>
+    </a>
+
+    <a href="/dashboard.html" id="nav-dashboard" style="text-decoration: none;">
+      <div class="side-bar-row">
+        <i class="side-bar-icons fa-solid fa-chart-line"></i>
+        <span class="row-text">Dashboard</span>
+      </div>
+    </a>
+
+  </div>
+    
+  <div class="side-bar-grid-end">
+    <div class="menu-divider"></div>
+      
+    <button id="settings-btn">
+      <i class="side-bar-configuration fa-solid fa-gear" id="gear"></i>
+      <span class="row-text">Settings</span>
+    </button>
+      
+    <a href="#" style="text-decoration: none;" onclick="logout()">
+      <div class="side-bar-row sign-out-row">
+        <i class="side-bar-icons fa-solid fa-right-from-bracket"></i>
+        <span class="row-text">Sign out</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="settings-box" id="settings-box">
+    <div class="settings-row">
+      <i class="fa-solid fa-circle-user settings-icon"></i>
+      <p class="settings-text">Profile</p>
+    </div>
+        
+    <div class="settings-row">
+      <i class="fa-solid fa-language settings-icon"></i>
+      <select id="language-select" class="settings-text" style="background: transparent; border: none; outline: none; cursor: pointer; color: var(--text);">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="it">Italiano</option>
+      </select>
+    </div>
+
+    <div id="google_translate_element" style="display:none;"></div>
+        
+    <div class="settings-row">
+      <i class="fa-solid fa-circle-half-stroke settings-icon"></i>
+      <input type="checkbox" class="switch" id="theme">
+      <p class="settings-text">Light/ Dark Theme</p>
+    </div>
+ 
+    <a  href="/help.html" style="text-decoration: none;">
+      <div class="settings-row">
+        <i class="fa-solid fa-circle-info settings-icon"></i>
+        <p class="settings-text">Help & Support</p>
+      </div>
+    </a>
+
+    <a href="/about-us.html" style="text-decoration: none;"  > 
+      <div class="settings-row">
+        <i class="fa-solid fa-people-group settings-icon"></i>
+        <p class="settings-text">About Us</p>
+      </div>
+    </a> 
+  </div>
+</div>
+<div class="container">
+    <h1>Generated Testimonials</h1>
+    
+    <div class="controls-top">
+        <input type="search" id="search-bar" placeholder="Search by ID, volunteer...">
+        
+        <button id="refresh" class="btn-outline">
+            <i style="color: var(--primary);" class="fa-solid fa-rotate-right"></i> Refresh
+        </button>
+        <button id="delete-selected-btn" class="btn-outline" disabled>
+            <i style="color: var(--primary);" class="fa-solid fa-trash"></i> Delete Selected
+        </button>
+        <span style="color: var(--text-dark);" id="selected-count" class="selection-summary">0 selected</span>
+    </div>    
+
+    <div class="layout-main">
+        <aside class="filter-sidebar">
+            <button id="filter-btn" type="button" class="btn-outline">
+                <i style="color: var(--primary);" class="fa-solid fa-sliders"></i> Filters
+            </button>
+            
+            <div class="filter-options-wrapper">
+                <div class="preview-option-container" id="active-columns"></div>
+                <div class="preview-add-container" id="available-columns"></div>
+            </div>
+        </aside>
+
+        <main class="table-section">
+            <div class="table-header">
+                <p id="hits-counter" class="hits-text">0 hits</p>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="reports-table">
+                    <thead>
+                      <tr id="table-headers"></tr>
+                    </thead>
+                    <tbody id="reports-body"></tbody>
+                </table>
+            </div>
+
+            <div class="pagination-footer">
+                <button id="prev-btn" type="button" class="btn-outline" disabled>
+                    <i style="color: var(--primary);" class="fa-solid fa-arrow-left"></i> Prev
+                </button>
+                <p id="page-info" class="page-info-text">Page 1 of 1</p>
+                <button id="next-btn" type="button" class="btn-outline">
+                    Next <i style="color: var(--primary);" class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div id="filter-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 style="color: var(--text-dark);">Advanced Filters</h2>
+            <button id="close-filters" type="button" class="close-modal">&times;</button>
+        </div>
+
+        
+ 
+        <div class="modal-body" style="background-color: var(--content-bg);">
+            <div class="advanced-filters-grid">
+ 
+                <div class="filter-column">
+                    <h3 class="column-title">
+                        <i class="fa-solid fa-sliders column-icon"></i>
+                            <p class="modal-text">General</p>
+                    </h3>
+                    
+                    
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-sort">
+                            <p class="modal-text">Sort by</p>
+                        </label>
+                        
+                        <select id="filter-sort" class="filter-select modal-text">
+                            <option value="newest">Newest first</option>
+                            <option value="oldest">Oldest first</option>
+                            <option value="most-people">Most people</option>
+                            <option value="least-people">Least people</option>
+                            <option value="media-first">Reports with media first</option>
+                        </select>
+                    </div>
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-volunteer">Volunteer</label>
+                        <input type="text" id="filter-volunteer" class="filter-input" placeholder="Username, partial name...">
+                    </div>
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-interview-type">Interview type</label>
+                        <input type="text" id="filter-interview-type" class="filter-input" placeholder="E.g. phone, in_person">
+                    </div>
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-timezone">Timezone</label>
+                        <input type="text" id="filter-timezone" class="filter-input" placeholder="E.g. Europe/Madrid">
+                    </div>
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-placement">Placement/ Location</label>
+                        <input type="text" id="filter-placement" class="filter-input" placeholder="City, neighborhood, site...">
+                    </div>
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-country">Country/ Location name</label>
+                        <input type="text" id="filter-country" class="filter-input" placeholder="Spain, UK, Morocco...">
+                    </div>
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-needs">Text search</label>
+                        <input type="text" id="filter-needs" class="filter-input" placeholder="Search inside report text">
+                    </div>
+
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-last-days">Last edited in the last ... days
+
+                        </label>
+                        <input
+                        type="number"
+                        id="filter-last-days"
+                        class="filter-input-small"
+                        placeholder="7"
+                        >
+                    </div>
+ 
+                    <h3 class="column-title mt-2">
+                        <i class="fa-solid fa-calendar-days column-icon"></i>
+                        <p class="modal-text">Date range</p>
+                    </h3>
+ 
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-fecha-desde">From date</label>
+                        <input type="datetime-local" id="filter-fecha-desde" class="filter-input">
+                    </div>
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-fecha-hasta">To date</label>
+                        <input type="datetime-local" id="filter-fecha-hasta" class="filter-input">
+                    </div>
+                </div>
+ 
+                <div class="filter-column">
+                    <h3 class="column-title">
+                        <i class="fa-solid fa-users column-icon"></i>
+                        <p class="modal-text">People & media</p>
+                    </h3>
+ 
+                    <div class="filter-row">
+                        <label for="filter-min-people" class="modal-text">Min people</label>
+                        <input type="number" id="filter-min-people" class="filter-input-small" min="0" placeholder="0">
+                    </div>
+                    <div class="filter-row">
+                        <label for="filter-max-people" class="modal-text">Max people</label>
+                        <input type="number" id="filter-max-people" class="filter-input-small" min="0" placeholder="Any">
+                    </div>
+ 
+                    <div class="filter-section mt-1">
+                        <label class="section-subtitle">Age</label>
+                        <div class="operator-row">
+                            <select id="filter-age-operator" class="filter-select">
+                                <option value="is">Is</option>
+                                <option value="more_than">More than</option>
+                                <option value="less_than">Less than</option>
+                            </select>
+                            <input type="number" id="filter-age" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section">
+                        <label class="section-subtitle" for="filter-gender">Gender</label>
+                        <select id="filter-gender" class="filter-select">
+                        <option value="">Any</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        </select>
+                    </div>
+ 
+                    <h3 class="column-title mt-2">
+                        <i class="fa-solid fa-photo-film column-icon"></i>
+                        <p class="modal-text">Media</p>
+                    </h3>
+ 
+                    <div class="filter-row checkbox-row">
+                        <input type="checkbox" id="filter-has-map">
+                        <label for="filter-has-map" class="modal-text">Has map</label>
+                    </div>
+                    <div class="filter-row checkbox-row">
+                        <input type="checkbox" id="filter-has-audio">
+                        <label for="filter-has-audio" class="modal-text">Has audio</label>
+                    </div>
+                    <div class="filter-row checkbox-row">
+                        <input type="checkbox" id="filter-has-photo">
+                        <label for="filter-has-photo" class="modal-text">Has photo</label>
+                    </div>
+                    <div class="filter-row checkbox-row">
+                        <input type="checkbox" id="filter-has-manual">
+                        <label for="filter-has-manual" class="modal-text">Has manual text</label>
+                    </div>
+                    <div class="filter-row checkbox-row">
+                        <input type="checkbox" id="filter-has-point-description">
+                        <label for="filter-has-point-description" class="modal-text">Point has description</label>
+                    </div>
+                    <div class="filter-row checkbox-row">
+                        <input type="checkbox" id="filter-has-point-date">
+                        <label for="filter-has-point-date" class="modal-text">Point has date</label>
+                    </div>
+
+                </div>
+ 
+                <div class="filter-column">
+                    <h3 class="column-title">
+                        <i class="fa-solid fa-map-location-dot column-icon"></i>
+                        <p class="modal-text">Map points</p>
+                    </h3>
+ 
+                    
+ 
+                    <h4 class="section-subtitle mt-1">Points by category</h4>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-location-dot" style="color:#3b82f6;"></i> Current location</span>
+                        <div class="operator-row">
+                            <select id="filter-current-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-current-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-skull" style="color:#7c3aed;"></i> Mafia</span>
+                        <div class="operator-row">
+                            <select id="filter-mafia-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-mafia-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-shield-halved" style="color:#0ea5e9;"></i> Police</span>
+                        <div class="operator-row">
+                            <select id="filter-police-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-police-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-person-walking-arrow-right" style="color:#f97316;"></i> Pushback</span>
+                        <div class="operator-row">
+                            <select id="filter-pushback-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-pushback-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Violence</span>
+                        <div class="operator-row">
+                            <select id="filter-violence-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-violence-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-hand-holding-dollar" style="color:#b45309;"></i> Robbery</span>
+                        <div class="operator-row">
+                            <select id="filter-robbery-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-robbery-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-money-bill-wave" style="color:#854d0e;"></i> Extortion</span>
+                        <div class="operator-row">
+                            <select id="filter-extortion-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-extortion-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-kit-medical" style="color:#10b981;"></i> Medical</span>
+                        <div class="operator-row">
+                            <select id="filter-medical-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-medical-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-house" style="color:#6366f1;"></i> Refuge</span>
+                        <div class="operator-row">
+                            <select id="filter-refuge-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-refuge-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                    <div class="filter-section category-filter">
+                        <span class="cat-label"><i class="fa-solid fa-utensils" style="color:#f59e0b;"></i> Food</span>
+                        <div class="operator-row">
+                            <select id="filter-food-operator" class="filter-select filter-select-sm">
+                                <option value="more_than">&gt;</option>
+                                <option value="is">=</option>
+                                <option value="less_than">&lt;</option>
+                            </select>
+                            <input type="number" id="filter-food-count" class="filter-input-small" min="0" placeholder="—">
+                        </div>
+                    </div>
+ 
+                </div></div></div><div class="modal-footer">
+            <button id="reset-filters-btn" type="button" class="btn-outline">Reset Filters</button>
+            <button id="apply-filters-btn" type="button" class="btn-apply">
+                <i class="fa-solid fa-check"></i> Apply Filters
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="/config.js"></script>
+<script src="/translator.js"></script>
+<script src="/database.js"></script>
+<script src="/sidebar.js"></script>
+</body>
+</html>

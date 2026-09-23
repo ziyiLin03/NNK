@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Mapping - No Name Kitchen</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="stylesheet" href="/style/general.css">
+    <link rel="stylesheet" href="/style/map.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.min.js"></script>
+</head>
+<body>
+
+    <a href="/new-report.html">
+        <button class="return-btn">
+            <i class="fa-solid fa-arrow-left return-icon"></i>
+            <span style="color: var(--text-dark);">Return</span>  
+        </button>
+    </a>
+    
+    <div class="map-container">
+        <header class="map-header">
+            <h1>Mark Incidents</h1>
+        </header>
+
+        <div id="mapaEscritura"></div>
+
+        <div class="map-footer">
+            <button class="btn-map btn-back" onclick="window.location.href='/new-report.html'">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <button id="btnGuardarMapa" class="btn-map btn-save">
+                <i class="fa-solid fa-check"></i> Finish & Save
+            </button>
+        </div>
+    </div>
+    
+    <input type="checkbox" id="theme" style="display: none;">
+    <script src="/config.js"></script>
+    <script src="/sidebar.js"></script>
+    <script src="/map.js"></script>
+    <script src="/translator.js"></script>
+</body>
+</html>

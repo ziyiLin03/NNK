@@ -1,0 +1,216 @@
+/* =========================================
+   RESETEO BÁSICO PARA EVITAR SCROLL HORIZONTAL
+========================================= */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Vital: evita que el mapa empuje la web hacia los lados */
+}
+
+/* =========================================
+   ESTILOS GENERALES Y CONTENEDOR
+========================================= */
+.map-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px; /* Este padding ahora sí se aplicará a los dos lados */
+    box-sizing: border-box; /* Obliga a que el padding se calcule hacia adentro */
+    min-height: calc(100vh - 60px); 
+}
+
+/* Todos los hijos comparten el mismo comportamiento de ancho */
+.map-header, #mapaEscritura, .map-footer {
+    width: 100%; 
+    max-width: 1000px;
+    box-sizing: border-box;
+}
+
+.map-header {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.map-header h1 {
+  color: rgb(193, 18, 31);
+  border-bottom: 2px solid rgb(193, 18, 31);
+  width: 100%; 
+  max-width: 820px;
+  margin: 0;
+  margin-left: 90px;
+  margin-top: 20px;
+}
+
+/* =========================================
+   MAPA DE LEAFLET
+========================================= */
+#mapaEscritura {
+    /* Le quitamos el flex-grow. Ahora le damos una altura controlada */
+    height: 60vh; 
+    min-height: 400px; /* En ordenadores grandes no bajará de esto */
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(162,202,206);
+    z-index: 1;
+    background-color: #121212;
+}
+
+.leaflet-container {
+    background: #121212 !important; 
+}
+
+/* =========================================
+   BOTONES Y FOOTER
+========================================= */
+.map-footer {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 40px; /* Dejamos margen por abajo para que hacer scroll sea cómodo */
+}
+.btn-map {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+}
+
+.btn-save { background-color: #28a745; }
+.btn-save:hover { background-color: #218838; transform: scale(1.05); }
+
+.btn-back { background-color: #444; }
+.btn-back:hover { background-color: #333; transform: scale(1.05); }
+
+/* =========================================
+   POPUP MENÚ DEL MAPA
+========================================= */
+.leaflet-popup-content-wrapper {
+    background: var(--content-bg);
+    color: var(--content-bg);
+    border-radius: 12px;
+    border: 1px solid #444;
+    padding-right: 12px !important;
+}
+
+.popup-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px;
+}
+
+.popup-menu b {
+    text-align: center;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.menu-btn {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+
+.menu-btn:hover { filter: brightness(1.2); transform: translateX(5px); }
+
+/* =========================================
+   MEDIA QUERIES (TABLET Y MÓVIL)
+========================================= */
+
+/* Adaptación para iPad / Tablet */
+@media (min-width: 701px) and (max-width: 1100px) {
+  .map-container {
+      width: 100%;
+      padding: 30px 40px;
+      box-sizing: border-box;
+      align-items: center;
+
+    }
+
+    .map-header h1 {
+      margin-top: 40px;
+      margin-left: 0;        
+      width: 100%;
+      max-width: 650px;
+      text-align: left;
+    }
+    #mapaEscritura {
+      height: 50vh;
+      min-height: 400px;
+      width: 100%;
+      max-width: 820px ;
+    }
+    .map-footer {
+      gap: 15px;
+      padding-bottom: 30px;
+
+    }
+
+    .btn-map {
+      padding: 12px 25px;
+      font-size: 1rem;
+    }
+}
+
+/* Adaptación para Móvil */
+@media (max-width: 500px) {
+  .map-container {
+      width: 100%;
+      padding: 0 40px;
+      box-sizing: border-box;
+      align-items: center;
+      padding-top: 80px;
+    }
+    
+    .map-header {
+        margin-bottom: 25px;
+        width: 100%;
+    }
+
+    .map-header h1 {
+      margin-top: -10px;
+      margin-left: 0;        /* resetea el margin-left: 90px del pc */
+      width: 100%;
+      max-width: 100%;
+      text-align: left;
+    }
+
+    #mapaEscritura {
+        height: 50vh; /* Mantiene la proporción en móvil */
+        min-height: 350px; 
+    }
+
+    .map-footer {
+      flex-direction: row;
+      gap: 12px;
+      margin-top: 20px;
+      padding-bottom: 20px;
+      width: 90%;
+    }
+
+    .btn-map {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      justify-content: center;
+    }
+}

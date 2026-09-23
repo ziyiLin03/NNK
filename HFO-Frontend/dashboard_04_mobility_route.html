@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HFO Analytics - Mobility Evidence &amp; Approximate Distance</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style/theme.css"/>
+  <link rel="stylesheet" href="style/dashboard2.css"/>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+  <style>
+    .how-to-read{font-size:12px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:12px;line-height:1.55;}
+    .insight{font-size:13px;color:var(--ok);margin-top:8px;padding:8px 12px;background:rgba(117,214,160,0.07);border-radius:8px;border-left:3px solid var(--ok);line-height:1.5;}
+    .summary-box{font-size:13px;line-height:1.7;padding:10px 14px;background:rgba(98,182,255,0.07);border:1px solid rgba(98,182,255,0.2);border-radius:10px;margin-bottom:12px;color:var(--text);}
+    .tab-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+    .csel{background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font:inherit;cursor:pointer;}
+  </style>
+  <script defer src="/config.js"></script>
+  <script defer src="/dashboard-prefs.js"></script>
+  <script defer src="/analysis-window-guard.js?v=20260508"></script>
+  <script defer src="/i18n.js"></script>
+  <script defer src="/help-tooltips.js"></script>
+  <script defer src="/api.js"></script>
+  <script defer src="/formatters.js"></script>
+  <script defer src="/filters.js"></script>
+  <script defer src="/charts.js"></script>
+  <script defer src="/mobility-route-dashboard.js?v=20260511approx"></script>
+  <script defer src="/export.js?v=20260511approx"></script>
+  <script defer src="/sidebar.js"></script>
+</head>
+<body>
+  <div class="page">
+
+    <div class="top-settings">
+      <div class="settings-group">
+        <label for="languageSelect">Language</label>
+        <select id="languageSelect"><option value="en">English</option><option value="es">Español</option></select>
+      </div>
+      <div class="top-actions">
+        <button type="button" id="exportPagePdfBtn" class="button primary" data-export-exclude="true" data-i18n="lbl.export_pdf">Export PDF report</button>
+        <button type="button" id="themeToggleBtn" data-theme-toggle class="button" data-i18n="lbl.dark_mode">Dark mode</button>
+      </div>
+    </div>
+
+        <nav class="page-index">
+      <span>Dashboards</span>
+      <a href="/index-dashboard.html">Home</a>
+      <a href="/operational_kpis_dashboard.html">Volume &amp; Coverage</a>
+      <a href="/demographics_dashboard.html">Demographics</a>
+      <a href="/dashboard_02_incident_needs.html">Incident &amp; Needs</a>
+      <a class="active" href="/dashboard_04_mobility_route.html">Mobility Evidence</a>
+      <span style="color:var(--line);margin:0 4px">|</span>
+      <a href="/dashboard.html" style="color:var(--muted);font-size:12px">Return to main website</a>
+    </nav>
+
+    <h1>Mobility Evidence &amp; Approximate Distance</h1>
+    <p class="subtitle">Approximate movement distance between ordered points from the same testimony · source: trajectories.json</p>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="section-title" data-i18n="lbl.zone_filter">Zone filter</h2>
+        <div class="how-to-read">
+          This dashboard summarizes mobility evidence from recorded trajectory points. Distances are approximate straight-line estimates between ordered points from the same testimony.
+        </div>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.time_window">Time window</div>
+          <div id="timeFilterButtons" class="filter-row">
+            <button type="button" class="filter-button" data-range="last1">24h</button>
+            <button type="button" class="filter-button" data-range="last7">7d</button>
+            <button type="button" class="filter-button" data-range="last30">30d</button>
+            <button type="button" class="filter-button" data-range="last90">90d</button>
+            <button type="button" class="filter-button" data-range="last180">180d</button>
+            <button type="button" class="filter-button" data-range="last365">365d</button>
+            <button type="button" class="filter-button" data-range="all">All</button>
+            <button type="button" class="filter-button" data-range="custom">Custom</button>
+          </div>
+          <div class="range-inputs">
+            <input id="customFrom" type="date" aria-label="Custom start date">
+            <input id="customTo" type="date" aria-label="Custom end date">
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.granularity">Granularity</div>
+          <div id="granularityButtons" class="filter-row"></div>
+        </div>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.mobility_metric">Displayed metric</div>
+          <div id="mobilityMetricButtons" class="filter-row">
+            <button type="button" class="filter-button active" data-mobility-metric="people" data-i18n="btn.people_represented">People represented</button>
+            <button type="button" class="filter-button" data-mobility-metric="testimonies" data-i18n="btn.testimonies">Testimonies</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="field-label" data-i18n="lbl.regions">Regions</div>
+          <div id="regionFilterButtons" class="filter-row"></div>
+        </div>
+        <div class="meta-boxes">
+          <div class="mini-box"><div class="k" data-i18n="lbl.source">Source</div><div id="metaSource" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.dataset_coverage">Dataset coverage</div><div id="metaDataset" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.selected_regions">Selected regions</div><div id="metaRegions" class="v">—</div></div>
+          <div class="mini-box"><div class="k" data-i18n="lbl.status">Status</div><div id="dashboardStatus" class="status">—</div></div>
+        </div>
+      </aside>
+
+      <main class="main">
+
+        <!-- KPI cards -->
+        <section class="cards">
+          <div class="card"><div class="label" data-i18n="lbl.testimonies_observed">Testimonies observed</div><div id="kpiGroups" class="value">—</div></div>
+          <div class="card"><div class="label">People represented</div><div id="kpiPeople" class="value">—</div></div>
+          <div class="card"><div class="label" data-i18n="lbl.trajectories_2plus">Trajectories with 2+ points</div><div id="kpiNoRoute" class="value">—</div></div>
+          <div class="card"><div class="label" data-i18n="lbl.avg_points_trajectory">Avg. points/ trajectory</div><div id="kpiAvgPoints" class="value">—</div></div>
+          <div class="card" style="border-left:3px solid var(--accent)">
+            <div class="label" data-i18n="lbl.avg_approx_distance_trajectory">Avg. approx. km/ trajectory</div>
+            <div id="kpiDuration" class="value">—</div>
+          </div>
+        </section>
+
+        <!-- Local mobility evidence over time -->
+        <section class="panel">
+          <h2 data-i18n="h2.movement_evidence">Movement evidence over time</h2>
+          <div class="how-to-read" id="howToTime"></div>
+          <div class="chart-wrap tall"><canvas id="timeSeriesChart"></canvas></div>
+          <p class="insight" id="timeSeriesInsight"></p>
+        </section>
+
+        <!-- Evidence by zone -->
+        <section class="panel">
+          <h2 data-i18n="h2.zone_evidence">People and testimonies observed by zone</h2>
+          <div class="how-to-read" id="howToRoutes"></div>
+          <div class="chart-wrap tall"><canvas id="routesChart"></canvas></div>
+          <p class="insight" id="routesInsight"></p>
+        </section>
+
+
+        <!-- Average trajectory indicators by zone -->
+        <section class="panel">
+          <h2 data-i18n="h2.trajectory_averages_zone">Average trajectory indicators by zone</h2>
+          <div class="how-to-read" id="howToTrajectoryAverages"></div>
+          <div class="grid-two">
+            <div>
+              <div class="panel-subtitle" data-i18n="lbl.avg_points_trajectory">Avg. points/ trajectory</div>
+              <div class="chart-wrap small"><canvas id="avgPointsZoneChart"></canvas></div>
+            </div>
+            <div>
+              <div class="panel-subtitle" data-i18n="lbl.avg_approx_distance_trajectory">Avg. approx. km/ trajectory</div>
+              <div class="chart-wrap small"><canvas id="avgKmZoneChart"></canvas></div>
+            </div>
+          </div>
+          <p class="insight" id="trajectoryAveragesInsight"></p>
+        </section>
+
+        <!-- Local tracking readiness -->
+        <section class="panel">
+          <h2 data-i18n="h2.distance_distribution">Approximate distance distribution</h2>          <div class="how-to-read" id="howToTracking"></div>
+          <div class="chart-wrap"><canvas id="trackingChart"></canvas></div>
+          <p class="insight" id="trackingInsight"></p>
+        </section>
+
+        <!-- Zone detail -->
+        <section class="panel">
+          <h2 data-i18n="h2.zone_detail">Zone coverage summary</h2>
+          <div class="how-to-read" id="howToRouteDetail"></div>
+          <div id="routeDetailSummary" class="summary-box"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Zone</th>
+                  <th class="number" data-i18n="lbl.testimonies">Testimonies</th>
+                  <th class="number">People</th>
+                  <th class="number">Observations</th>
+                  <th class="number" data-i18n="lbl.avg_points_trajectory_short">Avg. points/traj.</th>
+                  <th class="number" data-i18n="lbl.avg_approx_km_trajectory_short">Avg. km/traj.</th>
+                  <th class="number">Latest activity</th>
+                </tr>
+              </thead>
+              <tbody id="routeDetailBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Top local observation clusters -->
+        <section class="panel">
+          <h2 data-i18n="h2.movement_records">Approximate distance records</h2>
+          <div class="how-to-read" id="howToNodes"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th class="number">Points</th>
+                  <th class="number">People</th>
+                  <th class="number">Approx. distance</th>
+                  <th class="number">Duration</th>
+                  <th>Zones observed</th>
+                </tr>
+              </thead>
+              <tbody id="nodesBody"></tbody>
+            </table>
+          </div>
+          <p class="insight" id="nodesInsight"></p>
+        </section>
+
+        <!-- Data quality -->
+        <section class="panel">
+          <h2 data-i18n="h2.data_quality">Data quality <span style="font-size:13px;color:var(--muted);font-weight:400" data-i18n="lbl.field_completeness">— field completeness</span></h2>
+          <div class="how-to-read">Completeness of critical fields in the loaded dataset. <strong>* Required fields</strong> affect the reliability of this dashboard directly. 🔴 &lt;70% · 🟠 &lt;90% · 🟢 ≥90%</div>
+          <div id="dqCompletenessBar" style="margin-bottom:12px;"></div>
+          <div id="dqSummaryBox" style="font-size:13px;line-height:1.7;padding:10px 14px;background:rgba(255,193,7,0.07);border:1px solid rgba(255,193,7,0.2);border-radius:10px;margin-bottom:12px;color:var(--text);"></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th data-i18n="lbl.th_field">Field</th><th class="number" data-i18n="lbl.th_filled">Filled</th><th class="number" data-i18n="lbl.th_missing">Missing</th><th class="number" data-i18n="lbl.th_completeness">Completeness</th></tr></thead>
+              <tbody id="dqTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>

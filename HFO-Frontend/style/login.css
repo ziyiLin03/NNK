@@ -1,0 +1,177 @@
+*{
+  box-sizing: border-box;
+}
+
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('/assets/login_background.png') no-repeat;
+  background-size: cover;
+  background-position-y: center; 
+}
+
+.wrapper{
+  width: 420px;
+  background-color:rgba(255, 255, 255, 0.6);
+  border:2px solid rgba(255,255,255,.5);
+  color: #fff;
+  backdrop-filter: blur(2px);
+  border-radius: 10px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  padding: 30px 40px;
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+}
+
+.wrapper h2{
+  font-size: 23px;
+  text-align: center;
+  color: rgb(218,0,43);
+  color: black;
+}
+
+.wrapper h1{
+  text-align: center;
+  justify-content: center;
+}
+
+.wrapper .input-box{
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0px;
+}
+
+.input-box input{
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgb(132, 132, 132);
+  border-radius: 40px;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+  -ms-border-radius: 40px;
+  -o-border-radius: 40px;
+  font-size: 16px;
+  color: #000000;
+  padding: 20px 45px 20px 20px;
+  transition: all .35s;
+  -webkit-transition: all .35s;
+  -moz-transition: all .35s;
+  -ms-transition: all .35s;
+  -o-transition: all .35s;
+}
+
+.input-box input:hover{
+  border: 2px solid rgba(218, 0, 44);
+}
+
+.input-box input::placeholder{
+  color: #5a5a5a;
+}
+
+.input-box i{
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  font-size: 20px;
+}
+
+.wrapper .btn{
+  color: white;
+  width: 100%;
+  height: 45px;
+  background-color: rgb(218,0,43);
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+  -ms-border-radius: 40px;
+  -o-border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0,0,0,.1);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.25s;
+  -webkit-transition: background-color 0.25s;
+  -moz-transition: background-color 0.25s;
+  -ms-transition: background-color 0.25s;
+  -o-transition: background-color 0.25s;
+}
+
+.btn:hover{
+  background-color: rgb(119, 8, 8);
+}
+
+.logo{
+  width: 150px;
+}
+
+.error-text {
+  display: none; /* Oculto hasta que el JS diga lo contrario */
+  color: rgb(193, 18, 31); /* El rojo de tu marca */
+  font-size: 12px;
+  text-align: left;
+  margin-top: 5px;
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.register-text{
+  font-size: 12px;
+  text-align: center;
+  color: #5a5a5a;
+}
+
+.separation-login{
+  margin: 30px 0 20px 0;
+  border-bottom: 2px solid rgb(148, 0, 0);
+}
+
+@media (max-width:500px){
+  .wrapper{
+    width: 250px;
+  }
+  .logo{
+    width: 80px;
+  }
+  .wrapper h2{
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+  .wrapper .input-box{
+    margin: 0;
+  }
+
+  .input-box input{
+    font-size: 12px;
+    height: 35px;
+    padding: 0px 45px 0px 20px;
+ }
+  .input-box i{
+    top: 37%;
+    font-size: 12px;
+  }
+  .register-text{
+    font-size: 10px;
+  }
+  .wrapper .btn{
+    font-size: 10px;
+    height: 30px;
+  }
+  .separation-login{
+    margin: 10px 0 5px 0;
+  }
+}

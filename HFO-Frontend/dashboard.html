@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - No Name Kitchen</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/style/dashboard.css">
+</head>
+<body>
+<nav class="sidebar">
+  <div class="logo">
+    <img style="width: 100%" src="assets/no-name-kitchen-letters.png" alt="">
+  </div>
+
+  <div class="nav-menu">
+    <a href="/home.html" class="nav-item"><i class="fa-solid fa-home"></i><span class="nav-label">Home</span></a>
+    <a href="/chat.html" class="nav-item"><i class="fa-regular fa-comments"></i><span class="nav-label">Chat</span></a>
+    <a href="/database.html" class="nav-item"><i class="fa-solid fa-database"></i><span class="nav-label">Database</span></a>
+    <a href="/user-management.html" class="nav-item"><i class="fa-solid fa-users"></i><span class="nav-label">User Management</span></a>
+    <a href="/dashboard.html" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span class="nav-label">Dashboard</span></a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="menu-divider"></div>
+    <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i><span class="nav-label">Settings</span></a>
+    <a href="#" class="nav-item sign-out-row" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span class="nav-label">Sign Out</span></a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <header class="header">
+    <h1 style="color: var(--primary); font-size: 20px;" class="header-title">NNK - Dashboard</h1>
+    <p style="color: var(--text-muted); font-size: 14px;">Operating in Serbia, Bosnia and Herzegovina, Greece, Bulgaria, Italy, Spain and more!</p>
+    <div class="header-icons">
+      <a href="https://www.clocktab.com/" target="_blank" style="color: var(--text-muted); text-decoration: none;">
+      <i class="fa-regular fa-clock"></i>
+      </a>
+      <a href="chat.html" style="color: var(--text-muted); text-decoration: none;">
+        <i class="fa-regular fa-bell"></i>
+      </a>
+      <div class="user-profile">
+        <span id="user-role" style="font-size: 14px; font-weight: 600;"></span>
+        <div class="user-avatar">A</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+
+    <div class="left-column">
+
+      <div class="card-header" style="margin-bottom: -10px;">
+        <h2 class="card-title">Overview</h2>
+        <select id="data-grouping-select" class="export-select">
+          <option value="nationality">Nationality Analysis</option>
+          <option value="age">Age Analysis</option>
+          <option value="gender">Gender Analysis</option>
+        </select>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="sc-icon" style="background: #eef2ff; color: #4318FF;">
+            <i class="fa-solid fa-file-lines"></i>
+          </div>
+          <div>
+            <div class="sc-value" id="total-testimonies">0</div>
+            <div class="sc-label">Submitted Testimonies</div>
+          </div>
+          <div class="mini-progress-bar">
+            <div id="total-progress-bar" class="mini-progress-fill" style="width: 70%;"></div>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="sc-icon" style="background: #ecfdf5; color: #10b981;">
+            <i id="category-icon" class="fa-solid fa-earth-americas"></i>
+          </div>
+          <div>
+            <div class="sc-value" id="total-nationalities">0</div>
+            <div class="sc-label" id="category-label">Out of 195 Nationalities</div>
+          </div>
+          <div class="mini-progress-bar">
+            <div id="nationalities-progress-bar" class="mini-progress-fill" style="width: 45%; background: #10b981;"></div>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div id="c3-icon-bg" class="sc-icon">
+            <i id="c3-icon"></i>
+          </div>
+          <div>
+            <div class="sc-value" id="c3-value">-</div>
+            <div class="sc-label" id="c3-label">Loading...</div>
+          </div>
+          <div class="mini-progress-bar">
+            <div id="c3-progress" class="mini-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div id="c4-icon-bg" class="sc-icon">
+            <i id="c4-icon"></i>
+          </div>
+          <div>
+            <div class="sc-value" id="c4-value">-</div>
+            <div class="sc-label" id="c4-label">Loading...</div>
+          </div>
+          <div class="mini-progress-bar">
+            <div id="c4-progress" class="mini-progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 id="graphic-title" class="card-title"></h2>
+          <span style="border: none; background: #f4f7fe; padding: 5px 10px; border-radius: 8px; font-weight: 600; color: var(--text-muted); outline: none;">
+            All time data
+          </span>
+        </div>
+        <div class="chart-container">
+          <canvas id="mainChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title" id="table-card-title">Top Nationalities</h2>
+          <span style="color: var(--primary); font-size: 14px; font-weight: 600;">Preview</span>
+        </div>
+        <table class="list-table">
+          <thead>
+            <tr>
+              <th id="th-category">Nationality</th>
+              <th>Amount</th>
+              <th>Percentage</th>
+              <th id="th-extra">Unknown</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="country-table-body"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="right-column">
+
+      <div class="card" style="text-align: center;">
+        <h2 class="card-title" style="text-align: left; margin-bottom: 20px;">Database Status</h2>
+        <div style="position: relative; height: 150px; width: 100%; display: flex; justify-content: center;">
+          <canvas id="gaugeChart"></canvas>
+          <div id="gauge-text" style="position: absolute; top: 60px; font-size: 24px; font-weight: bold; color: rgb(136, 12, 12);">0%</div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; text-align: left;">
+          <div>
+            <div id="db-submitted-count" style="font-weight: 700;">0</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Submitted</div>
+          </div>
+          <div style="text-align: right;">
+            <div id="db-pending-count" style="font-weight: 700;">0</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Pending</div>
+          </div>
+        </div>
+        <button style="width: 100%; margin-top: 25px; background: var(--secondary); color: var(--primary); border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;" onclick="window.location.href='/database.html'">
+          Review Submitted Data
+        </button>
+      </div>
+
+      <div class="card" style="flex-grow: 1;">
+        <div style="display: flex; gap: 20px; border-bottom: 1px solid #e9edf7; margin-bottom: 20px; padding-bottom: 10px;">
+          <span id="tab-advanced" style="color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: -11px; cursor: pointer; transition: all 0.2s ease;">Advanced Dashboards</span>
+          <span id="tab-maps" style="color: var(--text-muted); font-weight: 600; padding-bottom: 10px; margin-bottom: -11px; cursor: pointer; transition: all 0.2s ease;">Map Dashboards</span>
+        </div>
+
+        <div id="content-advanced" style="display: flex; flex-direction: column; gap: 40px;">
+          <a href="/index-dashboard.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #eef2ff; color: #4318FF; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-dashboard"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Analytics Dashboard Menu</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Manage your analytics dashboards</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Main Page</div>
+            </div>
+          </a>
+
+          <a href="/operational_kpis_dashboard.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #eef2ff; color: #f0950d; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-chart-pie"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Operational KPIs</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">View operational KPIs and insights</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Data</div>
+            </div>
+          </a>
+
+          <a href="/demographics_dashboard.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #eef2ff; color: #037207; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-earth-americas"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Demographics Dashboard</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">View demographic data insights</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Data</div>
+            </div>
+          </a>
+
+          <a href="/dashboard_02_incident_needs.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #eef2ff; color: #ff4343; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Incident & Needs Dashboard</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">View incident and needs data insights</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Data</div>
+            </div>
+          </a>
+
+          <a href="/dashboard_04_mobility_route.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #eef2ff; color: #9200cc; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-person-running"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Mobility Route Dashboard</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">View mobility route data and insights</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Data</div>
+            </div>
+          </a>
+
+        </div>
+
+        <div id="content-maps" style="display: none; flex-direction: column; gap: 40px;">
+          <a href="/global-maps.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #f4f7fe; color: #4318FF; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-map-location-dot"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Maps Dashboards Menu</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Explore different map dashboards</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Main Page</div>
+            </div>
+          </a>
+
+          <a href="/map1.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #f4f7fe; color: #f0950d; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-person-military-pointing"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Events Map</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">View events and incidents on the map</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Data</div>
+            </div>
+          </a>
+
+          <a href="/map2.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #f4f7fe; color: #037207; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-person-running"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Route Flow Map</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Visualize route flow and traffic patterns</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Data</div>
+            </div>
+          </a>
+
+          <a href="/map3.html" style="text-decoration: none; color: inherit;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="background: #f4f7fe; color: #ff4343; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-temperature-high"></i></div>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;">Heat Map</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Visualize data density and distribution</div>
+                </div>
+              </div>
+              <div style="font-weight: 700; font-size: 14px;">Data</div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/config.js"></script>
+<script src="/dashboard.js"></script>
+</body>
+</html>

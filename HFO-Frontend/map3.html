@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heat Map - No Name Kitchen</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+  <link rel="stylesheet" href="/style/map3.css"/>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <button class="return-btn" onclick="window.location='/global-maps.html'">
+      <i class="fa-solid fa-arrow-left return-icon"></i>
+      <span style="color: black;">Return</span>  
+    </button>
+  <div id="root"></div>
+  <script>
+    window.API_BASE_URL = "https://hfobackend-production.up.railway.app";
+    window.DATASET_ENDPOINT = "/api/reports/";
+    window.DATASET_DATE_FROM_PARAM = "fecha_desde";
+    window.DATASET_DATE_TO_PARAM = "fecha_hasta";
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.2.0",
+      "react-dom/client": "https://esm.sh/react-dom@18.2.0/client"
+    }
+  }
+</script>
+  <script src="/config.js"></script>
+  <script type="module" src="/src/map3.js"></script>
+  <script src="/map3-maplibre-gl.js"></script>
+  <script src="/sidebar.js"></script>
+</body>
+</html>

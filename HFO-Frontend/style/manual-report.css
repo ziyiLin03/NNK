@@ -1,0 +1,219 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box; /* Obliga a que el padding se calcule hacia adentro */
+  min-height: calc(100vh - 60px);   
+}
+
+h1 {
+  color: rgb(193, 18, 31);
+  border-bottom: 2px solid rgb(193, 18, 31);
+  width: 100%;
+  max-width: 820px; 
+  margin: -5px 0 30px -15px; 
+  text-align: left;
+}
+
+#formTextos {
+  display: grid;
+  row-gap: 15px;
+  max-width: 820px;
+  width: 100%;
+}
+
+/* --- ESTILO TIPO "MESSAGE-PREVIEW" PARA INPUTS --- */
+
+.field-row {
+  width: 100%;
+  max-width: 820px;
+  display: flex;
+  column-gap: 5px;
+  margin-left: -9px;
+}
+
+label {
+  color: var(--text-dark);
+  width: 150px;
+
+}
+
+input, select, textarea {
+  flex: 1;
+  margin-bottom: 20px;
+  border-radius: 40px;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+  padding: 8px 12px; /* Un poco más de padding para que respiren como las tarjetas */
+  border: 2px solid rgb(183, 183, 183); /* Borde de tu tema */
+  background-color: var(--content-bg); 
+  color: var(--text-dark);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+option{
+  background-color: var(--content-bg); 
+  color: var(--text-dark);
+}
+
+select:invalid {
+  color: rgb(183, 183, 183);
+}
+
+textarea {
+  border-radius: 20px; 
+  height: 120px;
+  resize: none; 
+}
+
+input::placeholder, textarea::placeholder{
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* El mismo efecto hover/focus que tus tarjetas del /home */
+input:focus, select:focus, textarea:focus,
+input:hover, select:hover, textarea:hover {
+  border-color: rgb(77, 77, 77);
+  box-shadow: 0 0 8px rgb(162, 202, 206); /* Tu brillo azulado */
+}
+
+/* Botón Submit */
+.container button {
+  margin-top: 5px;
+  background-color: white;
+  color: rgb(193, 18, 31);
+  border: 2px solid rgb(193, 18, 31);
+  font-weight: bold;
+  padding: 12px 40px;
+  border-radius: 40px;
+  cursor: pointer;
+  width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  transition: background-color .2s;
+}
+
+#btn-submit {
+  background-color: rgb(193, 18, 31);
+  color: white;
+  border: 2px solid rgb(193, 18, 31);
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: none;
+  margin-bottom: 15px;
+}
+
+#btn-submit:hover {
+  background-color: rgb(150, 10, 20);
+  border-color: rgb(150, 10, 20);
+  box-shadow: 0 0 8px rgba(193, 18, 31, 0.6); /* Brillo rojo para el botón */
+}
+
+/* Responsive */
+@media(max-width:500px) {
+  .container {
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    align-items: center;
+  }
+
+  h1 {
+    margin-top: 35px;
+    margin-left: 0;       
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  #formTextos {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .field-row {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;        
+    flex-direction: column; 
+    column-gap: 0;
+  }
+
+  label {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    flex: unset;
+  }
+
+  textarea {
+    height: 100px;
+  }
+
+  #btn-submit {
+    width: 80%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 12px;
+  }
+}
+
+@media (min-width:701px) and (max-width:1100px) {
+  .container {
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+    align-items: center;
+  }
+  h1 {
+    margin-top: 25px;
+    margin-left: 0;        
+    width: 100%;
+    max-width: 650px;
+    text-align: left;
+  }
+
+  #formTextos {
+    width: 100%;
+    max-width: 650px;
+  }
+
+  .field-row {
+    width: 100%;
+    max-width: 650px;
+    margin-left: 0;        /* resetea el -9px del pc */
+  }
+
+  input, select, textarea {
+    width: 100%;
+    box-sizing: border-box;
+    flex: 1;
+  }
+
+  #btn-submit {
+    width: auto;
+    text-align: center;
+  }
+}
