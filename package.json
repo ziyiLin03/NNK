@@ -1,0 +1,13 @@
+{
+  "name": "nnk-monorepo",
+  "private": true,
+  "scripts": {
+    "setup": "npm ci --prefix HFO-Frontend",
+    "dev": "npm run dev --prefix HFO-Frontend",
+    "build": "npm run build --prefix HFO-Frontend",
+    "preview": "npm run preview --prefix HFO-Frontend",
+    "test": "npm test --prefix HFO-Frontend",
+    "backend:up": "docker compose -f HFO-Backend/docker-compose.yml up --build",
+    "backend:down": "docker compose -f HFO-Backend/docker-compose.yml down"
+  }
+}
