@@ -10,11 +10,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import BasePermission, IsAuthenticated
 import re
 from .permissions import IsAdmin, IsAnalyst, IsVolunteer
-import base64
-import tempfile
 import os  
 import csv
 from groq import Groq
+from .media_uploads import save_audio, storage_unavailable
 from django.shortcuts import get_object_or_404
 
 from core.models import ChatRoom, ChatMessage
@@ -313,6 +312,9 @@ def upload_photo(request):
         image_data = request.data.get('image')
         if not image_data:
             return Response({'error': 'No image data provided'}, status=status.HTTP_400_BAD_REQUEST)
+        unavailable = storage_unavailable()
+        if unavailable is not None:
+            return unavailable
         upload_result = cloudinary.uploader.upload(image_data, folder="hfo_photos")
         return Response({'url': upload_result.get('secure_url')}, status=status.HTTP_201_CREATED)
     except Exception as e:
@@ -358,56 +360,7 @@ def delete_photo(request):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsVolunteer])
 def upload_audio(request):
-    """POST /api/upload-audio/"""
-    try:
-        audio_data = request.data.get('audio')
-        extension  = request.data.get('extension', 'webm')
-
-        cabecera, audiostr = audio_data.split(';base64,')
-        clean_audio_data   = f"data:video/{extension};base64,{audiostr}"
-
-        upload_result = cloudinary.uploader.upload(
-            clean_audio_data, resource_type="video", folder="hfo_audios"
-        )
-        file_url = upload_result.get('secure_url')
-
-        audio_bytes      = base64.b64decode(audiostr)
-        transcription_text = ""
-        client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix=f".{extension}") as temp_audio:
-            temp_audio.write(audio_bytes)
-            temp_file_path = temp_audio.name
-
-        try:
-            with open(temp_file_path, "rb") as f1:
-                transcription = client.audio.transcriptions.create(
-                    file=(temp_file_path, f1.read()),
-                    model="whisper-large-v3",
-                    response_format="json"
-                )
-            transcription_text = transcription.text
-
-            with open(temp_file_path, "rb") as f2:
-                translation = client.audio.translations.create(
-                    file=(temp_file_path, f2.read()),
-                    model="whisper-large-v3",
-                    response_format="json"
-                )
-            translation_text = translation.text
-        finally:
-            if os.path.exists(temp_file_path):
-                os.remove(temp_file_path)
-
-        return Response({
-            'url': file_url,
-            'transcription': transcription_text,
-            'translation': translation_text
-        }, status=status.HTTP_201_CREATED)
-
-    except Exception as e:
-        print(f"🚨 ERROR EN UPLOAD_AUDIO: {str(e)}")
-        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    return save_audio(request.data)
 
 
 @api_view(['POST'])

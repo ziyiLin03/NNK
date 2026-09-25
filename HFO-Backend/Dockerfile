@@ -30,4 +30,4 @@ COPY . /app/
 # Exponemos el puerto de Django
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate --noinput && exec gunicorn hfo_backend.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && exec gunicorn hfo_backend.wsgi:application --bind 0.0.0.0:${PORT:-8000} --timeout 120"]

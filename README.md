@@ -85,10 +85,22 @@ Referencias: [monorepos en Vercel](https://vercel.com/docs/monorepos),
 ```sh
 npm test
 npm run build
-python HFO-Backend/manage.py test api.tests.test_auth api.tests.test_deployment --settings=hfo_backend.test_settings
+python HFO-Backend/manage.py test api.tests.test_auth api.tests.test_deployment api.tests.test_reports_media --settings=hfo_backend.test_settings
 ```
 
 Las pruebas de Django usan SQLite en memoria, sin acceder a la base de producción.
+La migración 0023 repara la columna `translation` omitida por 0014 en bases nuevas;
+se ejecuta al arrancar Railway y conserva las columnas y datos existentes.
+Las pruebas de reportes verifican la lectura tras migraciones y que editar un
+reporte no borre de Cloudinary los archivos que todavía contiene.
+
+Para guardar fotos y audio, configurar en Railway `CLOUDINARY_CLOUD_NAME`,
+`CLOUDINARY_API_KEY` y `CLOUDINARY_API_SECRET` (o `CLOUDINARY_URL`).
+Sin estas credenciales las subidas devuelven un mensaje de servicio no configurado.
+`GROQ_API_KEY` habilita transcripción y traducción; si falta o falla, un audio
+subido puede guardarse sin transcripción. Los archivos se asocian al reporte
+al guardar el formulario, después de añadirlos al borrador en el navegador.
+
 La migración de reparación 0016 comprueba qué columnas faltan y también funciona
 al crear esta base desde cero. Las pruebas antiguas de `api.tests.test_reports`
 siguen pendientes de actualizar: usan el campo eliminado `status`, sustituido

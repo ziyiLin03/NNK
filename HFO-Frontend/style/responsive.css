@@ -1,0 +1,61 @@
+/* Shared layout corrections, loaded after each page's own stylesheet. */
+*, *::before, *::after { box-sizing: border-box; }
+img, video, audio, canvas { max-width: 100%; }
+input, select, textarea { min-width: 0; max-width: 100%; }
+button, a, input, select, textarea { touch-action: manipulation; }
+button:focus-visible, a:focus-visible { outline: 3px solid #c1121f; outline-offset: 3px; }
+.side-bar, .settings-bar { max-width: 90vw; overflow-y: auto; max-height: 100dvh; }
+dialog { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
+
+@media (max-width: 1100px) {
+  .dashboard-page { display: block; height: auto; overflow: auto; }
+  .dashboard-page .sidebar { position: static; width: 100%; min-width: 0; }
+  .dashboard-page .sidebar .logo { display: none; }
+  .dashboard-page .nav-menu { display: flex; flex-wrap: wrap; padding: 8px; }
+  .dashboard-page .nav-item { width: auto; min-height: 44px; }
+  .dashboard-page .sidebar-bottom { padding: 8px; }
+  .dashboard-page .main-content { margin-left: 0; height: auto; overflow: visible; padding: 16px; }
+  .dashboard-page .header { flex-wrap: wrap; gap: 12px; }
+  .dashboard-layout { grid-template-columns: minmax(0, 1fr); }
+  .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .container, .audio-container, .camera-container { width: 100%; max-width: 100%; margin-left: 0; padding: 76px 20px 32px; }
+  .container > input, .message-preview { width: 100%; max-width: 820px; }
+  .container > *, .main-content, .table-section, .chat-main { min-width: 0; }
+  .controls-top, .controls-bar, .action-buttons-container, .photo-buttons { flex-wrap: wrap; gap: 12px; }
+  .table-container, .table-wrapper { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+  .modal-content { max-width: calc(100vw - 24px); max-height: 90dvh; overflow-y: auto; }
+  .grid { width: 100%; max-width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .application { width: 100%; min-width: 0; }
+  .message-preview { white-space: normal; overflow-wrap: anywhere; }
+  .recorder-layout, .review-section { width: 100%; max-width: 100%; }
+}
+
+@media (max-width: 700px) {
+  .dashboard-page .nav-menu { gap: 4px; }
+  .dashboard-page .nav-item { padding: 10px; font-size: 14px; }
+  .dashboard-page .summary-grid { grid-template-columns: minmax(0, 1fr); }
+  .dashboard-page .card-header, .dashboard-page .header-icons { flex-wrap: wrap; gap: 10px; }
+  .container, .audio-container, .camera-container { padding: 76px 12px 28px; }
+  h1, .page-title { font-size: clamp(1.4rem, 6vw, 2rem); overflow-wrap: anywhere; }
+  input:not([type=checkbox]):not([type=radio]), select, textarea { font-size: 16px; }
+  button, .action-btn, .btn { min-height: 44px; }
+  .grid, .field-row, .filter-grid { grid-template-columns: minmax(0, 1fr); }
+  .field-row, .controls-top, .controls-bar { flex-direction: column; align-items: stretch; }
+  .controls-top > *, .controls-bar > *, .search-box, .date-range-container { min-width: 0; max-width: 100%; width: 100%; }
+  .recorder-layout { flex-direction: column; padding: 16px; }
+  .audio-container header { flex-wrap: wrap; gap: 12px; }
+  #mic-select { width: 100%; }
+  .photo-buttons, .action-buttons-container { width: 100%; gap: 10px; }
+  .photo-buttons button, .action-buttons-container button { flex: 1 1 140px; }
+  .chat-layout { padding-top: 64px; flex-direction: column; }
+  .chat-sidebar { width: 100%; max-height: 28dvh; flex: 0 0 auto; border-right: 0; }
+  .chat-sidebar .room-info, .chat-sidebar .sidebar-header h2 { display: block; }
+  .chat-sidebar .room-item { justify-content: flex-start; padding: 10px 16px; }
+  .chat-sidebar .sidebar-header { justify-content: space-between; }
+  .chat-main { flex: 1; min-height: 0; }
+  .chat-input-area { padding: 10px; gap: 8px; }
+  .msg-bubble { max-width: 100%; overflow-wrap: anywhere; }
+  .pagination-footer { flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .pagination-footer button { min-width: 90px; flex: 1; }
+  .page-info-text { flex-shrink: 0; white-space: nowrap; }
+}

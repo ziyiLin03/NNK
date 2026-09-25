@@ -209,11 +209,9 @@ class FieldReportCreateSerializer(serializers.ModelSerializer):
             self._save_positions(instance, positions_data)
 
         if photos_data is not None:
-            instance.photos.all().delete()
             self._save_photos(instance, photos_data)
 
         if audios_data is not None:
-            instance.audios.all().delete()
             self._save_audios(instance, audios_data)
 
         return instance
@@ -265,13 +263,18 @@ class FieldReportCreateSerializer(serializers.ModelSerializer):
         ReportPosition.objects.bulk_create(objs)
 
     def _save_photos(self, report, photos_data):
+        kept_ids = []
         for i, photo in enumerate(photos_data):
-            url   = photo.get('image') or photo.get('url') or photo
+            url = (photo.get('image') or photo.get('url')) if isinstance(photo, dict) else photo
             title = photo.get('title', 'Field Photo') if isinstance(photo, dict) else 'Field Photo'
             if url and isinstance(url, str):
-                ReportPhoto.objects.create(report=report, image=url, title=title, order=i)
+                item, _ = ReportPhoto.objects.update_or_create(
+                    report=report, image=url, defaults={'title': title, 'order': i})
+                kept_ids.append(item.pk)
+        report.photos.exclude(pk__in=kept_ids).delete()
 
     def _save_audios(self, report, audios_data):
+        kept_ids = []
         for i, audio in enumerate(audios_data):
             if isinstance(audio, dict):
                 # Ahora acepta cualquiera de estas llaves:
@@ -286,14 +289,12 @@ class FieldReportCreateSerializer(serializers.ModelSerializer):
                 title = ''
 
             if url and isinstance(url, str):
-                ReportAudio.objects.create(
-                    report=report, 
-                    audio_url=url,
-                    transcription=transcription, 
-                    translation=translation,
-                    title=title, 
-                    order=i,
-                )
+                item, _ = ReportAudio.objects.update_or_create(
+                    report=report, audio_url=url,
+                    defaults={'transcription': transcription, 'translation': translation,
+                              'title': title, 'order': i})
+                kept_ids.append(item.pk)
+        report.audios.exclude(pk__in=kept_ids).delete()
 
 
 # ─── 6. FieldReport READ ──────────────────────────────────────────────────────

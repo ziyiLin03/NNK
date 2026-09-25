@@ -85,6 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Double-check limit before capturing
         if (checkPhotoLimit()) return;
 
+        if (!video.videoWidth || !video.videoHeight) {
+            alert('Wait until the camera is ready before taking a photo.');
+            return;
+        }
+
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
@@ -124,8 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ image: photoBase64 })
             });
 
-            if (!response.ok) throw new Error("Server error");
-            const data = await response.json();
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || data.detail || `Upload failed (${response.status})`);
             
             temporaryPhotoUrl = data.url; 
 
@@ -137,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Error uploading photo:", error);
-            alert("Connection error. Please try again.");
+            alert(error.message || 'Could not upload the photo. Please try again.');
             btnCapture.innerHTML = textoOriginal;
             btnCapture.disabled = false;
         }

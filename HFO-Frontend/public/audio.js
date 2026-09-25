@@ -33,6 +33,7 @@ const MAX_AUDIOS = 5;
 let audioBlob            = null;
 let temporaryAudioUrl    = '';
 let currentTranslation   = '';
+let uploadedTranscription = '';
 let currentTranscription = '';
 
 let savedAudios = Array.isArray(draft.audios) ? [...draft.audios] : [];
@@ -156,6 +157,7 @@ updateAudioCounter();
 function resetRecordingState(message = 'Audio saved! You can record another clip or go back.') {
     temporaryAudioUrl    = '';
     currentTranslation   = '';
+    uploadedTranscription = '';
     currentTranscription = '';
     audioBlob            = null;
 
@@ -343,15 +345,13 @@ saveButton.onclick = async () => {
             }
 
             temporaryAudioUrl  = data.url;
-            currentTranslation = data.translation;
+            currentTranslation = data.translation || '';
+            uploadedTranscription = data.transcription || '';
 
             if (reviewSection && textEditor) {
-                transcriptionBox.innerHTML = `
-                    <span>English Translation (AI Initial):</span>
-                    <p>${data.translation}</p>
-                `;
+                transcriptionBox.textContent = data.warning || data.translation || 'Audio uploaded. You can save it now.';
                 transcriptionBox.style.color = 'var(--text-dark)';
-                textEditor.value = data.transcription;
+                textEditor.value = uploadedTranscription;
 
                 recButton.style.display     = 'none';
                 pauseButton.style.display   = 'none';
@@ -361,7 +361,7 @@ saveButton.onclick = async () => {
 
         } catch (error) {
             console.error('Error uploading audio:', error);
-            transcriptionBox.innerHTML = '<span style="color:red">Error during analysis. Check the console.</span>';
+            transcriptionBox.textContent = error.message || 'Could not upload the audio. Please try again.';
             saveButton.disabled  = false;
             saveButton.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Retry Analysis';
         }
@@ -372,8 +372,8 @@ saveButton.onclick = async () => {
 async function saveTranscription(action) {
     const finalTranscription = textEditor.value.trim();
 
-    if (!finalTranscription) {
-        alert('The transcription cannot be empty.');
+    if (!temporaryAudioUrl) {
+        alert('Upload a recording before saving.');
         return;
     }
 
@@ -388,20 +388,28 @@ async function saveTranscription(action) {
 
     try {
         const token = getToken();
-        const response = await fetch(`${BASE_URL}/api/translate-text/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify({ text: finalTranscription })
-        });
-
-        if (!response.ok) throw new Error('Translation failed on the server');
-
-        const data = await response.json();
+        let translation = currentTranslation || '';
+        if (finalTranscription && finalTranscription !== uploadedTranscription) {
+            try {
+                const response = await fetch(`${BASE_URL}/api/translate-text/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ text: finalTranscription }),
+                });
+                if (!response.ok) throw new Error('Translation failed on the server');
+                const data = await response.json();
+                translation = data.translation || '';
+            } catch (error) {
+                console.warn('Saving audio without an updated translation:', error);
+                translation = '';
+                alert('Translation is unavailable. Your audio and transcription will still be saved.');
+            }
+        }
 
         savedAudios.push({
             url:           temporaryAudioUrl,
             transcription: finalTranscription,
-            translation:   data.translation,
+            translation,
             title:         `Audio ${savedAudios.length + 1}`,
             timestamp:     new Date().toISOString()
         });
@@ -418,8 +426,8 @@ async function saveTranscription(action) {
         }
 
     } catch (error) {
-        console.error('Error re-translating:', error);
-        alert('Error translating the text. Please check your connection and try again.');
+        console.error('Error saving audio draft:', error);
+        alert('Could not save the audio draft on this device. Please free some storage and try again.');
         activeBtn.innerHTML = originalHtml;
         if (btnSaveNext)   btnSaveNext.disabled   = false;
         if (btnSaveFinish) btnSaveFinish.disabled = false;

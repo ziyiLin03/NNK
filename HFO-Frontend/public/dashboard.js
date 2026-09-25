@@ -9,12 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return; // ← importante: detiene todo lo demás
     }
 
-    if (window.innerWidth < 700) {
-        window.location.href = './home.html'; // o login.html
-        alert("Please come back on a Computer or large Tablet for data visualization.");
-        return; // ← importante: detiene todo lo demás
-    }
-
     const BASE_URL = window.API_BASE_URL || 'http://127.0.0.1:8000'; 
 
     const accountText = document.getElementById('user-role');
