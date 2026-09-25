@@ -12,6 +12,7 @@ import re
 from .permissions import IsAdmin, IsAnalyst, IsVolunteer
 import os  
 import csv
+import logging
 from groq import Groq
 from .media_uploads import save_audio, storage_unavailable
 from django.shortcuts import get_object_or_404
@@ -371,10 +372,16 @@ def translate_corrected_text(request):
     text = request.data.get('text')
     if not text:
         return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
+    api_key = os.environ.get("GROQ_API_KEY")
+    if not api_key:
+        return Response(
+            {'error': 'Automatic translation is not configured.'},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
     try:
-        client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+        client = Groq(api_key=api_key, timeout=20, max_retries=0)
         completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model=os.environ.get("GROQ_TRANSLATION_MODEL", "openai/gpt-oss-20b"),
             messages=[
                 {"role": "system", "content": "You are a professional translator for No Name Kitchen NGO. Translate the following text to English accurately. Return ONLY the translated text, without quotes, explanations, or extra words."},
                 {"role": "user", "content": text}
@@ -383,9 +390,12 @@ def translate_corrected_text(request):
         )
         translation = completion.choices[0].message.content.strip()
         return Response({'translation': translation}, status=status.HTTP_200_OK)
-    except Exception as e:
-        print(f"🚨 ERROR EN TRANSLATE_TEXT: {str(e)}")
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception:
+        logging.getLogger(__name__).exception("Text translation failed")
+        return Response(
+            {'error': 'Automatic translation is temporarily unavailable.'},
+            status=status.HTTP_502_BAD_GATEWAY,
+        )
 
 
 @api_view(['DELETE'])

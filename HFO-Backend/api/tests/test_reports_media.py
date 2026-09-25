@@ -9,6 +9,20 @@ from api.serializers import FieldReportCreateSerializer
 
 
 class ReportsMediaTests(TestCase):
+    @patch.dict('os.environ', {'GROQ_API_KEY': 'test-key'}, clear=False)
+    @patch('api.views.Groq')
+    def test_text_translation_uses_supported_default_model(self, groq):
+        groq.return_value.chat.completions.create.return_value = SimpleNamespace(
+            choices=[SimpleNamespace(message=SimpleNamespace(content='Translated text'))]
+        )
+        response = self.client.post('/api/translate-text/', {'text': 'Texto'}, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['translation'], 'Translated text')
+        self.assertEqual(
+            groq.return_value.chat.completions.create.call_args.kwargs['model'],
+            'openai/gpt-oss-20b',
+        )
+
     @patch('cloudinary.uploader.destroy')
     def test_edit_keeps_existing_cloudinary_files(self, destroy):
         report = FieldReport.objects.create(submitted_by=self.user)

@@ -22,7 +22,7 @@
         <h1>Photo Testimonial</h1> 
         <div class="photos-col">  
           <div class="take-photo-grid">
-          <input type="file" accept="image/*" capture="environment" id="mobile-input" style="display: none;">
+          <input type="file" accept="image/*" id="device-image-input" hidden>
   
           <video id="video" autoplay playsinline></video>
           <div class="photo-buttons">
@@ -31,6 +31,9 @@
           </button>
           <button id="captureButton">
             <i class="fa-solid fa-camera icons"></i>  Take Photo
+          </button>
+          <button id="upload-device-button" type="button">
+            <i class="fa-solid fa-arrow-up-from-bracket icons"></i> Upload from device
           </button>
           </div>
           </div>

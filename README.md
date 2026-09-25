@@ -100,6 +100,8 @@ Sin estas credenciales las subidas devuelven un mensaje de servicio no configura
 `GROQ_API_KEY` habilita transcripción y traducción; si falta o falla, un audio
 subido puede guardarse sin transcripción. Los archivos se asocian al reporte
 al guardar el formulario, después de añadirlos al borrador en el navegador.
+La traducción de texto usa `openai/gpt-oss-20b`; se puede cambiar mediante
+`GROQ_TRANSLATION_MODEL` sin modificar el código.
 
 La migración de reparación 0016 comprueba qué columnas faltan y también funciona
 al crear esta base desde cero. Las pruebas antiguas de `api.tests.test_reports`

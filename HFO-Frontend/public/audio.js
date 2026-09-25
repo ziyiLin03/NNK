@@ -396,13 +396,12 @@ async function saveTranscription(action) {
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ text: finalTranscription }),
                 });
-                if (!response.ok) throw new Error('Translation failed on the server');
                 const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Translation failed on the server');
                 translation = data.translation || '';
             } catch (error) {
                 console.warn('Saving audio without an updated translation:', error);
-                translation = '';
-                alert('Translation is unavailable. Your audio and transcription will still be saved.');
+                alert('The updated translation is unavailable. The audio, transcription, and any existing translation will still be saved.');
             }
         }
 

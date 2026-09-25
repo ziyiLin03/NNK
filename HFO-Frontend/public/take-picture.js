@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoGrid = document.getElementById('photo-grid');
     
     const btnCapture = document.getElementById('captureButton');
+    const btnUploadDevice = document.getElementById('upload-device-button');
+    const deviceImageInput = document.getElementById('device-image-input');
     const btnRetake = document.getElementById('retake-button');
     const btnSave = document.getElementById('save-button');
     const btnContinue = document.getElementById('continue-button'); 
@@ -80,6 +82,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startCamera();
 
+    async function uploadImage(imageData, triggerButton) {
+        const originalHtml = triggerButton.innerHTML;
+        triggerButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+        triggerButton.disabled = true;
+        btnCapture.disabled = true;
+        btnUploadDevice.disabled = true;
+
+        try {
+            const token = getToken();
+            const response = await fetch(`${BASE_URL}/api/upload-photo/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ image: imageData }),
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(data.error || data.detail || `Upload failed (${response.status})`);
+            }
+            temporaryPhotoUrl = data.url;
+            takePhotoGrid.style.display = 'none';
+            photoGrid.style.display = 'flex';
+        } catch (error) {
+            console.error('Error uploading photo:', error);
+            alert(error.message || 'Could not upload the photo. Please try again.');
+        } finally {
+            triggerButton.innerHTML = originalHtml;
+            btnCapture.disabled = false;
+            btnUploadDevice.disabled = false;
+        }
+    }
+
     // 🚀 2. CAPTURAR Y SUBIR
     btnCapture.addEventListener('click', async () => {
         // Double-check limit before capturing
@@ -114,38 +150,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         preview.src = photoBase64;
         
-        const textoOriginal = btnCapture.innerHTML;
-        btnCapture.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
-        btnCapture.disabled = true;
+        await uploadImage(photoBase64, btnCapture);
+    });
 
-        try {
-            const token = getToken();
-            const response = await fetch(`${BASE_URL}/api/upload-photo/`, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-                body: JSON.stringify({ image: photoBase64 })
-            });
+    btnUploadDevice.addEventListener('click', () => {
+        if (!checkPhotoLimit()) deviceImageInput.click();
+    });
 
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error || data.detail || `Upload failed (${response.status})`);
-            
-            temporaryPhotoUrl = data.url; 
-
-            takePhotoGrid.style.display = 'none';
-            photoGrid.style.display = 'flex'; 
-
-            btnCapture.innerHTML = textoOriginal;
-            btnCapture.disabled = false;
-
-        } catch (error) {
-            console.error("Error uploading photo:", error);
-            alert(error.message || 'Could not upload the photo. Please try again.');
-            btnCapture.innerHTML = textoOriginal;
-            btnCapture.disabled = false;
+    deviceImageInput.addEventListener('change', () => {
+        const file = deviceImageInput.files?.[0];
+        deviceImageInput.value = '';
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            alert('Select a valid image file.');
+            return;
         }
+        if (file.size > 10 * 1024 * 1024) {
+            alert('The image is too large. Select a file smaller than 10 MB.');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onerror = () => alert('The selected image could not be read.');
+        reader.onload = async () => {
+            preview.classList.remove('mirror');
+            preview.src = reader.result;
+            await uploadImage(reader.result, btnUploadDevice);
+        };
+        reader.readAsDataURL(file);
     });
 
     // 🗑️ 3. REPETIR

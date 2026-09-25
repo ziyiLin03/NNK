@@ -83,6 +83,7 @@ h1 {
 
 .switch-btn:hover .icons,
 #captureButton:hover .icons,
+#upload-device-button:hover .icons,
 #save-button:hover .icons,
 #retake-button:hover .icons {
   color: white;
@@ -91,6 +92,7 @@ h1 {
 #continue-button,
 #retake-button,
 #captureButton,
+#upload-device-button,
 #save-button,
 #modal-cancel,
 #modal-save,
@@ -113,6 +115,7 @@ h1 {
 #continue-button:hover,
 #retake-button:hover,
 #captureButton:hover,
+#upload-device-button:hover,
 #save-button:hover,
 #modal-cancel:hover,
 #modal-save:hover,
@@ -292,6 +295,7 @@ h1 {
   }
 
   #captureButton,
+  #upload-device-button,
   .photo-buttons button {
     flex: 1;  
     padding: 10px;
